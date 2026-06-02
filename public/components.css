@@ -90,7 +90,13 @@
   border: 1px solid var(--line); box-shadow: var(--shadow-sm);
 }
 .store-logo img { width: 100%; height: 100%; object-fit: contain; padding: 12%; }
-.store-logo--all { background: var(--accent-soft); color: var(--accent); font-family: var(--font-display); font-weight: 700; border: none; box-shadow: none; }
+.store-logo--all {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a78bfa 100%);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 14px rgba(99,102,241,.4);
+  display: inline-flex; align-items: center; justify-content: center;
+}
 .store-logo--bare { background: transparent; border: none; box-shadow: none; border-radius: 5px; }
 .store-logo--bare img { padding: 0; }
 .nav__links { display: flex; gap: 2px; margin-left: 10px; flex: 1; }

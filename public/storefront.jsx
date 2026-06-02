@@ -20,7 +20,18 @@ function FocuzLogo({ height = 32, onClick }) {
 function StoreLogo({ store, size = 40, className = '' }) {
   const s = window.FOCUZ_STORE_MAP[store] || {};
   if (!s.logo) {
-    return <span className={'store-logo store-logo--all ' + className} style={{ width: size, height: size, fontSize: size * 0.4 }}>{s.initial}</span>;
+    // Ícone de mercado/loja para "Todas"
+    return (
+      <span className={'store-logo store-logo--all ' + className} style={{ width: size, height: size }}>
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{width: size * 0.58, height: size * 0.58}}>
+          <path d="M3 9l1.5-6h15L21 9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M3 9h18v11a1 1 0 01-1 1H4a1 1 0 01-1-1V9z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/>
+          <path d="M9 9v2a3 3 0 006 0V9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+          <path d="M3 9a3 3 0 006 0" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+          <path d="M15 9a3 3 0 006 0" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+        </svg>
+      </span>
+    );
   }
   return (
     <span className={'store-logo ' + className} style={{ width: size, height: size }}>
