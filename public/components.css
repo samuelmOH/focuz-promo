@@ -410,6 +410,14 @@ select optgroup { background-color: var(--surface); color: var(--ink); }
 }
 
 
+
+/* hero__stats — só desktop */
+.hero__stats--desktop { display: flex; }
+
+@media (max-width: 600px) {
+  .hero__stats--desktop { display: none !important; }
+}
+
 /* ============================================================
    MOBILE — 600px e abaixo (smartphones)
    ============================================================ */
@@ -442,7 +450,24 @@ select optgroup { background-color: var(--surface); color: var(--ink); }
   .storetile__name { font-size: 12px; }
 
   /* ── CATEGORIAS: esconde chips, mostra dropdown ── */
-  .catfilter__dropdown { display: block; }
+  .catfilter__dropdown {
+    display: block !important;
+    width: 100%;
+    padding: 10px 36px 10px 14px;
+    border-radius: 12px;
+    border: 1.5px solid var(--accent);
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-color: var(--surface);
+  }
   .catfilter__list--chips { display: none !important; }
 
   /* ── BARRA BUSCA + SORT ── */

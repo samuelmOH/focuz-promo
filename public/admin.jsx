@@ -23,29 +23,26 @@ function AdminLogin({ L, onLogin, onBack }) {
         <div className="blob blob--1" /><div className="blob blob--2" />
       </div>
       <form className="login__card" onSubmit={submit}>
-        <div className="login__lock"><Icon name="shield" size={24} /></div>
         <h1 className="login__title">{L.login_title}</h1>
         <p className="login__sub">{L.login_sub}</p>
 
         <label className="field">
           <span className="field__label">{L.login_user}</span>
           <div className="field__wrap">
-            <Icon name="user" size={16} />
             <input value={user} onChange={(e) => { setUser(e.target.value); setErr(false); }} autoFocus placeholder="admin@email.com" />
           </div>
         </label>
         <label className="field">
           <span className="field__label">{L.login_pass}</span>
           <div className="field__wrap">
-            <Icon name="lock" size={16} />
             <input type="password" value={pass} onChange={(e) => { setPass(e.target.value); setErr(false); }} placeholder="••••••••" />
           </div>
         </label>
 
-        {err && <div className="login__err"><Icon name="x" size={14} /> {L.login_err}</div>}
+        {err && <div className="login__err">{L.login_err}</div>}
 
         <button className="btn btn--primary btn--lg login__btn" type="submit" disabled={busy}>
-          {busy ? <span className="spin" /> : <Icon name="lock" size={16} />} {L.login_btn}
+          {busy ? <span className="spin" /> : null} {L.login_btn}
         </button>
 
         <div className="login__hint mono">{L.login_hint}</div>

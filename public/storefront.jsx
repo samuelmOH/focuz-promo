@@ -11,7 +11,7 @@ const discountPct = (p, old) => (old && old > p ? Math.round((1 - p / old) * 100
 function FocuzLogo({ height = 32, onClick }) {
   return (
     <button className="brand" onClick={onClick} aria-label="Proruja — início">
-      <span className="focuz-logo" style={{ height, width: Math.round(height * 4.21) }} role="img" aria-label="Proruja" />
+      <span className="focuz-logo" style={{ height, width: Math.round(height * 4.231) }} role="img" aria-label="Proruja" />
     </button>
   );
 }
@@ -139,8 +139,8 @@ function Hero({ L, tw, stats, onSeeDeals, onHow }) {
               </button>
             ))}
           </div>
-          <div className="hero__stats">
-            <div className="stat"><b>{stats.products}+</b><span>{L.stat_products}</span></div>
+          <div className="hero__stats hero__stats--desktop">
+            <div className="stat"><b>5000+</b><span>{L.stat_products}</span></div>
             <div className="stat__div" />
             <div className="stat"><b>5</b><span>{L.stat_stores}</span></div>
             <div className="stat__div" />
@@ -283,8 +283,8 @@ function ProductCard({ p, L, lang, tw, i = 0 }) {
   const ageBadge = (() => {
     if (!p.createdAt) return null;
     const ageH = (Date.now() - new Date(p.createdAt).getTime()) / 3600000;
-    if (ageH < 3) return { label: '🔥 Novo', cls: 'card__timebadge card__timebadge--new' };
-    if (ageH >= 42) return { label: '⏳ Expirando', cls: 'card__timebadge card__timebadge--exp' };
+    if (ageH < 3) return { label: 'Novo', cls: 'card__timebadge card__timebadge--new' };
+    if (ageH >= 42) return { label: 'Expirando', cls: 'card__timebadge card__timebadge--exp' };
     return null;
   })();
 
@@ -377,8 +377,7 @@ function ProductGrid({ L, lang, tw, store, products, query, setQuery, category }
             <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={L.search_ph} />
           </label>
           <div className="sortsel">
-            <Icon name="sliders" size={15} />
-            <select value={sort} onChange={(e) => setSort(e.target.value)}>
+                        <select value={sort} onChange={(e) => setSort(e.target.value)}>
               <option value="relevance">{L.sort_relevance}</option>
               <option value="price_low">{L.sort_price_low}</option>
               <option value="price_high">{L.sort_price_high}</option>
@@ -408,7 +407,7 @@ function Footer({ L, onAdmin, go }) {
     <footer className="footer">
       <div className="footer__inner">
         <div className="footer__brand">
-          <span className="focuz-logo" style={{ height: 24, width: 83 }} role="img" aria-label="Focuz" />
+          <span className="focuz-logo" style={{ height: 24, width: Math.round(24 * 4.231) }} role="img" aria-label="Proruja" />
           <div className="footer__tag mono">{L.footer_made}</div>
         </div>
         <div className="footer__stores">
