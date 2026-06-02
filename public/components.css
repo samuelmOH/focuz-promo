@@ -330,8 +330,7 @@ select optgroup { background-color: var(--surface); color: var(--ink); }
 }
 .card:hover { box-shadow: var(--shadow-lg); border-color: var(--line-2); }
 .card--glass { background: color-mix(in oklch, var(--surface) 78%, transparent); backdrop-filter: blur(10px); border-color: color-mix(in oklch, var(--line-2) 80%, transparent); }
-.card--editorial { border-radius: 6px; border-color: var(--ink); box-shadow: 4px 4px 0 0 var(--accent); }
-.card--editorial:hover { box-shadow: 8px 8px 0 0 var(--accent); transform: none; }
+.card--editorial { border-radius: 6px; border-color: var(--accent); }
 .card__media { position: relative; }
 .card__media img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; }
 .card__disc { position: absolute; top: 12px; left: 12px; background: var(--accent); color: var(--accent-ink); font-size: 12px; font-weight: 600; padding: 4px 9px; border-radius: 8px; box-shadow: var(--shadow-sm); }
@@ -580,9 +579,10 @@ select optgroup { background-color: var(--surface); color: var(--ink); }
    PRODUCT MODAL — layout 2 colunas
    ============================================================ */
 .pmodal__overlay {
-  position: fixed; inset: 0; z-index: 1000;
-  background: rgba(0,0,0,.8);
-  backdrop-filter: blur(8px);
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0,0,0,.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   display: flex; align-items: center; justify-content: center;
   padding: 20px;
   animation: pmFadeIn .15s ease;
