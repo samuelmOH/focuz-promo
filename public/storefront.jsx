@@ -392,7 +392,6 @@ function ProductCard({ p, L, lang, tw, i = 0, onOpenModal }) {
           ? <img src={imgSrc} alt={name} loading="lazy" onError={(e) => { e.target.style.display = 'none'; }} />
           : <Placeholder label={'foto · ' + store.short.toLowerCase()} />}
         {disc > 0 && <span className="card__disc mono">-{disc}%</span>}
-        {ageBadge && <span className={ageBadge.cls}>{ageBadge.label}</span>}
         <span className="card__store"><StoreLogo store={p.store} size={18} className="store-logo--bare" />{store.short}</span>
       </div>
       <div className="card__body">
