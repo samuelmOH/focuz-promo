@@ -307,7 +307,7 @@ function ProductModal({ p, L, lang, onClose }) {
           {imgSrc
             ? <img src={imgSrc} alt={name} onError={(e) => e.target.style.display='none'} />
             : <div className="pmodal__placeholder"><span>{store.short}</span></div>}
-          {disc > 0 && <span className="card__disc mono pmodal__disc">-{disc}%</span>}
+          {disc > 0 && <span className="pmodal__disc mono">-{disc}%</span>}
           {ageBadge && <span className={ageBadge.cls} style={{position:'absolute',top:'14px',right:'14px',bottom:'auto',left:'auto'}}>{ageBadge.label}</span>}
         </div>
 
