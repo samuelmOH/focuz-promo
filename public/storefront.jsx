@@ -7,11 +7,11 @@ const fmtBRL = (n) =>
   'R$ ' + Number(n).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const discountPct = (p, old) => (old && old > p ? Math.round((1 - p / old) * 100) : 0);
 
-/* ---------- Focuz logo (recolors via CSS mask) ---------- */
-function FocuzLogo({ height = 26, onClick }) {
+/* ---------- Proruja logo ---------- */
+function FocuzLogo({ height = 32, onClick }) {
   return (
-    <button className="brand" onClick={onClick} aria-label="Focuz — início">
-      <span className="focuz-logo" style={{ height, width: Math.round(height * 3.47) }} role="img" aria-label="Focuz" />
+    <button className="brand" onClick={onClick} aria-label="Proruja — início">
+      <span className="focuz-logo" style={{ height, width: Math.round(height * 4.21) }} role="img" aria-label="Proruja" />
     </button>
   );
 }
