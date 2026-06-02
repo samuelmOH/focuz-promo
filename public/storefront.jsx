@@ -447,6 +447,7 @@ function ProductGrid({ L, lang, tw, store, products, query, setQuery, category }
   const cur = window.FOCUZ_STORE_MAP[store];
 
   return (
+    <>
     <section className="grid-wrap">
       <div className="grid-head">
         <div className="grid-head__title">
@@ -486,6 +487,7 @@ function ProductGrid({ L, lang, tw, store, products, query, setQuery, category }
     {modalProduct && (
       <ProductModal p={modalProduct} L={L} lang={lang} onClose={() => setModalProduct(null)} />
     )}
+    </>
   );
 }
 
