@@ -595,14 +595,14 @@ select optgroup { background-color: var(--surface); color: var(--ink); }
   border: 1px solid var(--line);
   border-radius: 20px;
   width: 100%;
-  max-width: 900px;
+  max-width: 1000px;
   max-height: 88vh;
   overflow: hidden;
   position: relative;
   box-shadow: 0 32px 80px rgba(0,0,0,.6);
   animation: pmSlideUp .2s ease;
   display: grid;
-  grid-template-columns: 420px 1fr;
+  grid-template-columns: 480px 1fr;
 }
 
 .pmodal__close {
@@ -644,8 +644,12 @@ select optgroup { background-color: var(--surface); color: var(--ink); }
   font-size: 28px; font-weight: 700; color: var(--ink-3);
 }
 .pmodal__disc {
-  position: absolute; top: 14px; left: 14px;
+  position: absolute; bottom: 14px; left: 14px;
   font-size: 13px; padding: 4px 10px;
+}
+.card__timebadge.pmodal__timebadge {
+  position: absolute; bottom: 14px; right: 14px;
+  top: auto; left: auto;
 }
 
 /* Coluna direita — info */
