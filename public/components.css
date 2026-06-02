@@ -437,7 +437,8 @@ select optgroup { background-color: var(--surface); color: var(--ink); }
 
   /* ── NAV ── */
   .nav { padding: 6px 10px; }
-  .nav__inner { padding: 4px 10px; height: 46px; }
+  .nav__inner { padding: 4px 10px; height: 46px; justify-content: space-between; }
+  .nav__actions { margin-left: auto; }
 
   /* ── HERO ── */
   .hero { padding: 64px 14px 20px; overflow: visible; }
@@ -558,24 +559,7 @@ select optgroup { background-color: var(--surface); color: var(--ink); }
 }
 
 /* ── CATFILTER DROPDOWN (só mobile) ─────────────────────────── */
-.catfilter__dropdown {
-  display: none;
-  width: 100%;
-  padding: 10px 14px;
-  border-radius: 12px;
-  border: 1px solid var(--line);
-  background: var(--surface);
-  color: var(--ink);
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  appearance: none;
-  -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 36px;
-}
+/* catfilter__dropdown nativo removido — usando CatDropdown customizado */
 
 /* ============================================================
    PRODUCT MODAL — layout 2 colunas
@@ -788,3 +772,125 @@ body.modal-open .card--soft {
 .ptable__row--expired { opacity: .55; }
 
 .btn--sm { padding: 4px 10px; font-size: 12px; }
+
+/* ============================================================
+   CAT DROPDOWN — glass style Apple (mobile only)
+   ============================================================ */
+.catdrop { display: none; }
+
+@media (max-width: 600px) {
+  .catdrop { display: block; width: 100%; }
+  .catfilter__list--chips { display: none !important; }
+
+  /* Trigger button */
+  .catdrop__trigger {
+    width: 100%;
+    display: flex; align-items: center; gap: 8px;
+    padding: 11px 14px;
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 14px;
+    color: var(--ink);
+    font-size: 14px; font-weight: 600;
+    cursor: pointer;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: background .15s;
+  }
+  .catdrop__trigger:active { background: rgba(255,255,255,.12); }
+  .catdrop__count {
+    font-size: 12px; color: var(--accent);
+    background: rgba(var(--accent-rgb, 99,102,241),.15);
+    padding: 1px 7px; border-radius: 20px;
+  }
+  .catdrop__arrow {
+    margin-left: auto; opacity: .6;
+    transition: transform .25s ease;
+  }
+  .catdrop__arrow.is-open { transform: rotate(180deg); }
+
+  /* Overlay escuro */
+  .catdrop__overlay {
+    position: fixed; inset: 0; z-index: 500;
+    background: rgba(0,0,0,.5);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex; align-items: flex-end;
+    animation: fadeIn .15s ease;
+  }
+
+  /* Sheet estilo Apple */
+  .catdrop__sheet {
+    width: 100%;
+    background: rgba(28,28,30,.92);
+    backdrop-filter: blur(40px) saturate(1.8);
+    -webkit-backdrop-filter: blur(40px) saturate(1.8);
+    border-top: 1px solid rgba(255,255,255,.1);
+    border-radius: 20px 20px 0 0;
+    padding: 0 0 env(safe-area-inset-bottom, 16px);
+    animation: slideUpSheet .3s cubic-bezier(.32,1,.23,1);
+    max-height: 75vh;
+    display: flex; flex-direction: column;
+  }
+  @keyframes slideUpSheet {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+
+  /* Handle */
+  .catdrop__handle {
+    width: 36px; height: 4px;
+    background: rgba(255,255,255,.2);
+    border-radius: 2px;
+    margin: 10px auto 0;
+    flex-shrink: 0;
+  }
+
+  /* Title */
+  .catdrop__title {
+    text-align: center;
+    font-size: 13px; font-weight: 600;
+    color: rgba(255,255,255,.5);
+    padding: 10px 16px 4px;
+    flex-shrink: 0;
+  }
+
+  /* Lista de opções */
+  .catdrop__list {
+    overflow-y: auto;
+    padding: 4px 12px 8px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Item */
+  .catdrop__item {
+    width: 100%;
+    display: flex; align-items: center;
+    padding: 13px 14px;
+    border-radius: 12px;
+    font-size: 15px; font-weight: 500;
+    color: rgba(255,255,255,.9);
+    background: transparent;
+    border: none; cursor: pointer;
+    transition: background .1s;
+    text-align: left;
+  }
+  .catdrop__item + .catdrop__item {
+    border-top: 1px solid rgba(255,255,255,.06);
+  }
+  .catdrop__item:active { background: rgba(255,255,255,.08); }
+  .catdrop__item.is-active {
+    color: var(--accent);
+    background: rgba(99,102,241,.12);
+    font-weight: 600;
+  }
+  .catdrop__item-name { flex: 1; }
+  .catdrop__item-count {
+    font-size: 13px;
+    color: rgba(255,255,255,.35);
+  }
+  .catdrop__item.is-active .catdrop__item-count {
+    color: var(--accent);
+    opacity: .7;
+  }
+}

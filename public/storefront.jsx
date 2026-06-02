@@ -218,6 +218,52 @@ function HowItWorks({ L, lang, onSeeDeals }) {
 }
 
 /* ============================ STORE SIDEBAR ============================ */
+
+/* ============================ CAT DROPDOWN (glass mobile) ============================ */
+function CatDropdown({ categories, category, setCategory, lang, countFor }) {
+  const [open, setOpen] = useState(false);
+  const cur = categories.find(c => c.id === category) || categories[0];
+
+  const close = () => setOpen(false);
+  useEffect(() => {
+    if (open) {
+      document.addEventListener('click', close);
+      document.body.style.overflow = 'hidden';
+    }
+    return () => { document.removeEventListener('click', close); document.body.style.overflow = ''; };
+  }, [open]);
+
+  return (
+    <div className="catdrop">
+      <button className="catdrop__trigger" onClick={(e) => { e.stopPropagation(); setOpen(o => !o); }}>
+        <span>{cur[lang]}</span>
+        <span className="catdrop__count mono">{countFor(cur.id)}</span>
+        <svg className={'catdrop__arrow' + (open ? ' is-open' : '')} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      {open && (
+        <div className="catdrop__overlay" onClick={close}>
+          <div className="catdrop__sheet" onClick={e => e.stopPropagation()}>
+            <div className="catdrop__handle" />
+            <div className="catdrop__title">Categorias</div>
+            <div className="catdrop__list">
+              {categories.map((c) => (
+                <button
+                  key={c.id}
+                  className={'catdrop__item' + (category === c.id ? ' is-active' : '')}
+                  onClick={() => { setCategory(c.id); close(); }}
+                >
+                  <span className="catdrop__item-name">{c[lang]}</span>
+                  <span className="catdrop__item-count mono">{countFor(c.id)}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function StoreSidebar({ L, lang, store, setStore, category, setCategory, products }) {
   const [open, setOpen] = useState(false);
   const stores = window.FOCUZ_STORES;
@@ -249,12 +295,9 @@ function StoreSidebar({ L, lang, store, setStore, category, setCategory, product
       </div>
       <div className="catfilter">
         <div className="eyebrow catfilter__label"><Icon name="filter" size={13} /> {L.filters_title}</div>
-        {/* Dropdown no mobile, chips no desktop */}
-        <select className="catfilter__dropdown" value={category} onChange={(e) => setCategory(e.target.value)}>
-          {window.FOCUZ_CATEGORIES.map((c) => (
-            <option key={c.id} value={c.id}>{c[lang]} ({countFor(c.id)})</option>
-          ))}
-        </select>
+        {/* Dropdown glass no mobile */}
+        <CatDropdown categories={window.FOCUZ_CATEGORIES} category={category} setCategory={setCategory} lang={lang} countFor={countFor} />
+        {/* Chips no desktop */}
         <div className="catfilter__list catfilter__list--chips">
           {window.FOCUZ_CATEGORIES.map((c) => (
             <button key={c.id} className={'chip' + (category === c.id ? ' is-active' : '')} onClick={() => setCategory(c.id)}>
