@@ -207,3 +207,46 @@
   }
   .pform__grid .field:nth-child(3) { margin-right: 8px; }
 }
+
+/* ── Admin mobile bar (voltar + sair) ── */
+.admin__mobilebar {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  .admin__mobilebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    margin-bottom: 8px;
+    background: var(--surface-2);
+    border-radius: 14px;
+    border: 1px solid var(--line);
+  }
+  .admin__mobiletitle {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+  }
+  .admin__mobilebtn {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 7px 12px;
+    border-radius: 10px;
+    font-size: 13px; font-weight: 600;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink-2);
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .admin__mobilebtn:active { background: var(--line); }
+  .admin__mobilebtn--danger {
+    color: #f87171;
+    border-color: rgba(248,113,113,.25);
+    background: rgba(248,113,113,.08);
+  }
+  .admin__mobilebtn--danger:active { background: rgba(248,113,113,.15); }
+}

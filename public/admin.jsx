@@ -445,6 +445,16 @@ function AdminApp({ L, lang, setLang, theme, toggleTheme, authed, setAuthed, pro
       </aside>
 
       <main className="admin__main">
+        {/* Barra mobile — voltar ao site + sair */}
+        <div className="admin__mobilebar">
+          <button className="admin__mobilebtn" onClick={onExit}>
+            <Icon name="external" size={15} /> Ver site
+          </button>
+          <span className="admin__mobiletitle">Admin</span>
+          <button className="admin__mobilebtn admin__mobilebtn--danger" onClick={() => { setAuthed(false); onExit(); }}>
+            <Icon name="lock" size={15} /> Sair
+          </button>
+        </div>
         <div className="admin__topbar">
           <h2 className="admin__h">
             {view === 'dash' ? L.admin_dash : view === 'products' ? L.admin_products : (editing ? L.form_edit : L.form_new)}
