@@ -252,8 +252,38 @@ function dbToProduct(row) {
     reviews:  row.reviews,
     url:      row.url,
     imageUrl: row.image_url,
+    image:    row.image_url,  // alias para compatibilidade com frontend
+    createdAt: row.created_at,
   };
 }
+
+// ── Limpeza automática — produtos expiram em 48h ──────────────
+async function cleanExpiredProducts() {
+  try {
+    const res = await pool.query(
+      "DELETE FROM products WHERE created_at < NOW() - INTERVAL '48 hours' RETURNING id"
+    );
+    if (res.rowCount > 0) console.log(`🗑️ ${res.rowCount} produtos expirados removidos`);
+  } catch (err) {
+    console.error('Erro na limpeza:', err.message);
+  }
+}
+
+// Roda a limpeza ao iniciar e a cada hora
+cleanExpiredProducts();
+setInterval(cleanExpiredProducts, 60 * 60 * 1000);
+
+// Rota manual de limpeza (admin)
+app.delete('/api/products/expired', auth, async (req, res) => {
+  try {
+    const result = await pool.query(
+      "DELETE FROM products WHERE created_at < NOW() - INTERVAL '48 hours' RETURNING id"
+    );
+    res.json({ deleted: result.rowCount });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // ── Start ─────────────────────────────────────────────────────
 app.listen(PORT, () => console.log(`✅ Focuz backend rodando na porta ${PORT}`));

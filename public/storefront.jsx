@@ -251,7 +251,13 @@ function StoreSidebar({ L, lang, store, setStore, category, setCategory, product
       </div>
       <div className="catfilter">
         <div className="eyebrow catfilter__label"><Icon name="filter" size={13} /> {L.filters_title}</div>
-        <div className="catfilter__list">
+        {/* Dropdown no mobile, chips no desktop */}
+        <select className="catfilter__dropdown" value={category} onChange={(e) => setCategory(e.target.value)}>
+          {window.FOCUZ_CATEGORIES.map((c) => (
+            <option key={c.id} value={c.id}>{c[lang]} ({countFor(c.id)})</option>
+          ))}
+        </select>
+        <div className="catfilter__list catfilter__list--chips">
           {window.FOCUZ_CATEGORIES.map((c) => (
             <button key={c.id} className={'chip' + (category === c.id ? ' is-active' : '')} onClick={() => setCategory(c.id)}>
               <span>{c[lang]}</span>
@@ -271,6 +277,16 @@ function ProductCard({ p, L, lang, tw, i = 0 }) {
   const cat = window.FOCUZ_CAT_MAP[p.category];
   const disc = discountPct(p.price, p.oldPrice);
   const name = lang === 'en' && p.name_en ? p.name_en : p.name;
+  const imgSrc = p.imageUrl || p.image || null;
+
+  // Badge de tempo: "NOVO" se < 3h, "EXPIRANDO" se > 42h
+  const ageBadge = (() => {
+    if (!p.createdAt) return null;
+    const ageH = (Date.now() - new Date(p.createdAt).getTime()) / 3600000;
+    if (ageH < 3) return { label: '🔥 Novo', cls: 'card__timebadge card__timebadge--new' };
+    if (ageH >= 42) return { label: '⏳ Expirando', cls: 'card__timebadge card__timebadge--exp' };
+    return null;
+  })();
 
   const onMove = (e) => {
     if (!tw.tilt || !ref.current) return;
@@ -285,10 +301,11 @@ function ProductCard({ p, L, lang, tw, i = 0 }) {
     <article className={'card card--' + tw.cardStyle} ref={ref} onMouseMove={onMove} onMouseLeave={onLeave}
       style={{ '--i': Math.min(i, 18) }}>
       <div className="card__media">
-        {p.image
-          ? <img src={p.image} alt={name} loading="lazy" onError={(e) => { e.target.style.display = 'none'; }} />
+        {imgSrc
+          ? <img src={imgSrc} alt={name} loading="lazy" onError={(e) => { e.target.style.display = 'none'; }} />
           : <Placeholder label={'foto · ' + store.short.toLowerCase()} />}
         {disc > 0 && <span className="card__disc mono">-{disc}%</span>}
+        {ageBadge && <span className={ageBadge.cls}>{ageBadge.label}</span>}
         <span className="card__store"><StoreLogo store={p.store} size={18} className="store-logo--bare" />{store.short}</span>
       </div>
       <div className="card__body">
