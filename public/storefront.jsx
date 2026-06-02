@@ -314,10 +314,6 @@ function ProductModal({ p, L, lang, onClose }) {
           <h2 className="pmodal__name">{name}</h2>
           {ageBadge && <span className={ageBadge.cls} style={{display:'inline-block',marginBottom:'8px'}}>{ageBadge.label}</span>}
 
-          {(p.desc || p.description) && (
-            <p className="pmodal__desc">{p.desc || p.description}</p>
-          )}
-
           {p.rating && (
             <div className="pmodal__rating">
               {'★★★★★'.slice(0, Math.round(p.rating))}{'☆☆☆☆☆'.slice(0, 5 - Math.round(p.rating))}
@@ -343,10 +339,14 @@ function ProductModal({ p, L, lang, onClose }) {
           >
             Comprar agora
           </a>
+          <p className="pmodal__disclaimer">Você será redirecionado para {store.name}</p>
 
-          <p className="pmodal__disclaimer">
-            Você será redirecionado para {store.name}
-          </p>
+          {(p.desc || p.description) && (
+            <div className="pmodal__desc-wrap">
+              <div className="pmodal__desc-title">Descrição</div>
+              <p className="pmodal__desc">{p.desc || p.description}</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
