@@ -135,36 +135,71 @@ app.delete('/api/products/:id', auth, async (req, res) => {
 // ── Bot do Mercado Livre ─────────────────────────────────────
 const { runBot } = require('./ml-bot');
 
-// OAuth Step 1 — redireciona para o ML
+// PKCE helpers
+const crypto = require('crypto');
+const pkceStore = {}; // guarda code_verifier por sessão
+
+function generateCodeVerifier() {
+  return crypto.randomBytes(32).toString('base64url');
+}
+function generateCodeChallenge(verifier) {
+  return crypto.createHash('sha256').update(verifier).digest('base64url');
+}
+
+// OAuth Step 1 — redireciona para o ML com PKCE
 app.get('/api/ml/auth', (req, res) => {
-  const url = `https://auth.mercadolivre.com.br/authorization?response_type=code&client_id=${process.env.ML_APP_ID}&redirect_uri=${process.env.ML_REDIRECT_URI}`;
-  res.redirect(url);
+  const verifier   = generateCodeVerifier();
+  const challenge  = generateCodeChallenge(verifier);
+  const sessionId  = crypto.randomBytes(8).toString('hex');
+  pkceStore[sessionId] = verifier;
+
+  const params = new URLSearchParams({
+    response_type:         'code',
+    client_id:             process.env.ML_APP_ID,
+    redirect_uri:          process.env.ML_REDIRECT_URI,
+    code_challenge:        challenge,
+    code_challenge_method: 'S256',
+    state:                 sessionId,
+  });
+
+  res.redirect(`https://auth.mercadolivre.com.br/authorization?${params}`);
 });
 
 // OAuth Step 2 — ML redireciona de volta com o código
 app.get('/api/ml/callback', async (req, res) => {
-  const { code } = req.query;
+  const { code, state } = req.query;
   if (!code) return res.status(400).send('Código ausente');
+
+  const verifier = pkceStore[state];
+  if (!verifier) return res.status(400).send('Sessão OAuth expirada. Tente novamente em /api/ml/auth');
+  delete pkceStore[state];
+
   try {
     const response = await fetch('https://api.mercadolibre.com/oauth/token', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({
-        grant_type:    'authorization_code',
-        client_id:     process.env.ML_APP_ID,
-        client_secret: process.env.ML_SECRET_KEY,
+        grant_type:     'authorization_code',
+        client_id:      process.env.ML_APP_ID,
+        client_secret:  process.env.ML_SECRET_KEY,
         code,
-        redirect_uri:  process.env.ML_REDIRECT_URI,
+        redirect_uri:   process.env.ML_REDIRECT_URI,
+        code_verifier:  verifier,
       }),
     });
     const data = await response.json();
     if (data.access_token) {
-      // Salva o token nas variáveis em memória (em produção, salvar no banco)
       process.env.ML_ACCESS_TOKEN = data.access_token;
       console.log('✅ ML OAuth OK. Token salvo.');
-      res.send('<h2>✅ Mercado Livre conectado! Pode fechar esta aba.</h2>');
+      res.send(`
+        <html><body style="font-family:sans-serif;text-align:center;padding:3rem">
+          <h2>✅ Mercado Livre conectado!</h2>
+          <p>Pode fechar esta aba e voltar ao painel admin.</p>
+        </body></html>
+      `);
     } else {
-      res.status(400).json(data);
+      console.error('ML OAuth erro:', data);
+      res.status(400).send(`<pre>Erro ML: ${JSON.stringify(data, null, 2)}</pre>`);
     }
   } catch (err) {
     res.status(500).send('Erro no OAuth: ' + err.message);
