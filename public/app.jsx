@@ -54,12 +54,7 @@ window.apiRequest = async function(method, path, body) {
 };
 
 function loadProducts() {
-  // Retorna os seed products enquanto a API carrega
-  try {
-    const raw = localStorage.getItem(LS_PRODUCTS);
-    if (raw) return JSON.parse(raw);
-  } catch (e) {}
-  return window.FOCUZ_SEED_PRODUCTS.slice();
+  return [];
 }
 
 const SCREENS = ['home', 'store', 'how', 'admin'];
