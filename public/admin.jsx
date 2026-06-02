@@ -110,9 +110,28 @@ function Dashboard({ L, lang, products }) {
 }
 
 /* ---------------- Products Table ---------------- */
-function ProductsTable({ L, lang, products, onEdit, onDelete, onNew }) {
+function ProductsTable({ L, lang, products, onEdit, onDelete, onNew, onRenew }) {
   const [q, setQ] = aUseState('');
-  const list = products.filter((p) => (p.name + ' ' + (p.name_en || '')).toLowerCase().includes(q.toLowerCase()));
+  const [storeFilter, setStoreFilter] = aUseState('all');
+
+  const getAge = (p) => p.createdAt ? (Date.now() - new Date(p.createdAt).getTime()) / 3600000 : 0;
+  const getStatus = (p) => {
+    const h = getAge(p);
+    if (h >= 48) return 'expired';
+    if (h >= 42) return 'expiring';
+    if (h < 3) return 'new';
+    return 'active';
+  };
+
+  const stores = ['all', ...new Set(products.map(p => p.store))];
+  const list = products.filter((p) => {
+    if (storeFilter !== 'all' && p.store !== storeFilter) return false;
+    return (p.name + ' ' + (p.name_en || '')).toLowerCase().includes(q.toLowerCase());
+  });
+
+  const statusLabel = { new: 'Novo', active: 'Ativo', expiring: 'Expirando', expired: 'Expirado' };
+  const statusCls   = { new: 'ptable__status--new', active: 'ptable__status--active', expiring: 'ptable__status--exp', expired: 'ptable__status--dead' };
+
   return (
     <div className="ptable-wrap">
       <div className="ptable-head">
@@ -122,25 +141,39 @@ function ProductsTable({ L, lang, products, onEdit, onDelete, onNew }) {
         </label>
         <button className="btn btn--primary" onClick={onNew}><Icon name="plus" size={16} /> {L.admin_new}</button>
       </div>
+      <div className="ptable-filters">
+        {stores.map((s) => {
+          const st = window.FOCUZ_STORE_MAP[s];
+          return (
+            <button key={s} className={'ptable-filter' + (storeFilter === s ? ' is-active' : '')} onClick={() => setStoreFilter(s)}>
+              {s === 'all' ? 'Todas' : <><StoreLogo store={s} size={16} className="store-logo--bare" />{st?.short}</>}
+            </button>
+          );
+        })}
+      </div>
       <div className="ptable">
         <div className="ptable__row ptable__row--head">
-          <span>{L.tbl_product}</span><span>{L.tbl_store}</span><span>{L.tbl_cat}</span>
+          <span>{L.tbl_product}</span><span>{L.tbl_store}</span><span>Status</span>
           <span>{L.tbl_price}</span><span className="ptable__act">{L.tbl_actions}</span>
         </div>
         {list.map((p) => {
           const store = window.FOCUZ_STORE_MAP[p.store];
-          const cat = window.FOCUZ_CAT_MAP[p.category];
+          const status = getStatus(p);
+          const imgSrc = p.imageUrl || p.image || null;
           return (
-            <div className="ptable__row" key={p.id}>
+            <div className={'ptable__row' + (status === 'expired' ? ' ptable__row--expired' : '')} key={p.id}>
               <span className="ptable__prod">
-                <span className="ptable__thumb">{p.image ? <img src={p.image} alt="" /> : <Icon name="image" size={16} />}</span>
+                <span className="ptable__thumb">{imgSrc ? <img src={imgSrc} alt="" /> : <Icon name="image" size={16} />}</span>
                 <span className="ptable__pname">{lang === 'en' && p.name_en ? p.name_en : p.name}</span>
               </span>
               <span><span className="pill" data-store={p.store}><StoreLogo store={p.store} size={18} className="store-logo--bare" />{store.short}</span></span>
-              <span className="ptable__cat">{cat[lang]}</span>
+              <span><span className={'ptable__status ' + statusCls[status]}>{statusLabel[status]}</span></span>
               <span className="ptable__price">{fmtBRL(p.price)}</span>
               <span className="ptable__act">
-                <button className="iconbtn iconbtn--sm" onClick={() => onEdit(p)} title={L.f_edit}><Icon name="edit" size={15} /></button>
+                {status === 'expired'
+                  ? <button className="btn btn--sm btn--ghost" onClick={() => onRenew && onRenew(p)} title="Renovar por mais 48h">Renovar</button>
+                  : <button className="iconbtn iconbtn--sm" onClick={() => onEdit(p)} title={L.f_edit}><Icon name="edit" size={15} /></button>
+                }
                 <button className="iconbtn iconbtn--sm iconbtn--danger" onClick={() => onDelete(p)} title={L.f_delete}><Icon name="trash" size={15} /></button>
               </span>
             </div>
@@ -340,6 +373,21 @@ function AdminApp({ L, lang, setLang, theme, toggleTheme, authed, setAuthed, pro
   const [botRunning, setBotRunning] = aUseState(false);
   const [botResult, setBotResult] = aUseState(null);
 
+  const renewProduct = async (p) => {
+    // Renovar: atualiza created_at para agora via PUT
+    const payload = { ...p, imageUrl: p.imageUrl || p.image || '', _renew: true };
+    const updated = await window.apiRequest('PUT', `/products/${p.id}`, payload);
+    if (updated) {
+      const fresh = { ...updated, image: updated.imageUrl, createdAt: new Date().toISOString() };
+      window.apiRequest('GET', '/products').then((data) => {
+        if (Array.isArray(data)) {
+          // Força reload dos produtos
+          window.location.reload();
+        }
+      });
+    }
+  };
+
   const runBot = async () => {
     setBotRunning(true);
     setBotResult(null);
@@ -388,9 +436,7 @@ function AdminApp({ L, lang, setLang, theme, toggleTheme, authed, setAuthed, pro
           <button className="admin__link" onClick={() => setLang(lang === 'pt' ? 'en' : 'pt')}>
             <Icon name="globe" size={17} /> <span className="mono">{lang.toUpperCase()}</span>
           </button>
-          <button className="admin__link" onClick={toggleTheme}>
-            <Icon name={theme === 'dark' ? 'sun' : 'moon'} size={17} /> {theme === 'dark' ? 'Light' : 'Dark'}
-          </button>
+
           <button className="admin__link" onClick={onExit}><Icon name="external" size={17} /> {L.admin_view_site}</button>
           <button className="admin__link admin__logout" onClick={() => { setAuthed(false); onExit(); }}>
             <Icon name="lock" size={17} /> {L.admin_logout}
@@ -435,7 +481,7 @@ function AdminApp({ L, lang, setLang, theme, toggleTheme, authed, setAuthed, pro
               )}
             </div>
           )}
-          {view === 'products' && <ProductsTable L={L} lang={lang} products={products} onEdit={goEdit} onDelete={deleteProduct} onNew={goNew} />}
+          {view === 'products' && <ProductsTable L={L} lang={lang} products={products} onEdit={goEdit} onDelete={deleteProduct} onNew={goNew} onRenew={renewProduct} />}
           {view === 'form' && <ProductForm L={L} lang={lang} editing={editing} onSave={save} onCancel={() => setView('products')} />}
         </div>
       </main>

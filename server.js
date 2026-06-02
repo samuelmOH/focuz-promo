@@ -104,9 +104,11 @@ app.post('/api/products', auth, async (req, res) => {
 app.put('/api/products/:id', auth, async (req, res) => {
   try {
     const p = req.body;
+    const renewClause = p._renew ? ', created_at = NOW()' : '';
     await pool.query(
       `UPDATE products SET name_pt=$1, name_en=$2, store=$3, category=$4,
        price=$5, old_price=$6, rating=$7, reviews=$8, url=$9, image_url=$10, description=$11
+       ${renewClause}
        WHERE id=$12`,
       [p.name, p.nameEn || p.name, p.store, p.category || 'tech',
        p.price, p.oldPrice || null, p.rating || 4.5, p.reviews || 0,
