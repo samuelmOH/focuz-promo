@@ -287,7 +287,8 @@ function StoreSidebar({ L, lang, store, setStore, category, setCategory, product
     <aside className="sidebar">
       <div className="storepicker">
         <div className="eyebrow storepicker__label">{L.stores_title}</div>
-        <div className={'storepicker__stack' + (open ? ' is-open' : '')}>
+        {/* Desktop: dropdown animado */}
+        <div className={'storepicker__stack storepicker__stack--desktop' + (open ? ' is-open' : '')}>
           <button className="storepicker__main" onClick={() => setOpen((o) => !o)}>
             <StoreLogo store={store} size={64} />
             <span className="storepicker__caret" style={{ transform: open ? 'rotate(180deg)' : 'none' }}><Icon name="chevron" size={16} /></span>
@@ -302,6 +303,16 @@ function StoreSidebar({ L, lang, store, setStore, category, setCategory, product
               </button>
             ))}
           </div>
+        </div>
+        {/* Mobile: grid de logos */}
+        <div className="storepicker__grid">
+          {stores.map((s) => (
+            <button key={s.id} className={'storepicker__tile' + (store === s.id ? ' is-active' : '')}
+              onClick={() => setStore(s.id)}>
+              <StoreLogo store={s.id} size={44} />
+              <span className="storepicker__tilename">{s.short}</span>
+            </button>
+          ))}
         </div>
       </div>
       <div className="catfilter">

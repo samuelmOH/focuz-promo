@@ -900,3 +900,47 @@ body.modal-open .card--soft {
     opacity: .7;
   }
 }
+
+/* ── StorePicker mobile grid ── */
+.storepicker__grid { display: none; }
+
+@media (max-width: 600px) {
+  /* Esconde dropdown desktop */
+  .storepicker__stack--desktop { display: none !important; }
+
+  /* Mostra grid */
+  .storepicker__grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+  }
+
+  .storepicker__tile {
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    padding: 8px 4px;
+    border-radius: 14px;
+    border: 2px solid transparent;
+    background: var(--surface-2);
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .storepicker__tile:active { transform: scale(.94); }
+
+  /* Selecionada: borda accent + fundo suave */
+  .storepicker__tile.is-active {
+    border-color: var(--accent);
+    background: color-mix(in oklch, var(--accent) 12%, var(--surface));
+    box-shadow: 0 0 0 1px var(--accent), 0 4px 12px rgba(99,102,241,.25);
+  }
+
+  .storepicker__tilename {
+    font-size: 10px; font-weight: 600;
+    color: var(--ink-2);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    max-width: 100%;
+    text-align: center;
+  }
+  .storepicker__tile.is-active .storepicker__tilename {
+    color: var(--accent);
+  }
+}
