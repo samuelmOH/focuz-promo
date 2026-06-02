@@ -624,9 +624,21 @@ select optgroup { background-color: var(--surface); color: var(--ink); }
   min-height: 420px;
   display: flex; align-items: center; justify-content: center;
 }
+.pmodal__media::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(var(--accent-rgb,.3), .08) 0%, transparent 60%);
+  pointer-events: none;
+}
 .pmodal__media img {
   width: 100%; height: 100%;
-  object-fit: contain; padding: 24px;
+  object-fit: cover;
+  transition: transform .4s ease;
+}
+.pmodal__media img:hover { transform: scale(1.04); }
+/* fallback se imagem for pequena — usa contain */
+.pmodal__media img[data-small] {
+  object-fit: contain; padding: 32px;
 }
 .pmodal__placeholder {
   font-size: 28px; font-weight: 700; color: var(--ink-3);
