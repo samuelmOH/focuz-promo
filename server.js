@@ -87,10 +87,10 @@ app.post('/api/products', auth, async (req, res) => {
     const p = req.body;
     const id = 'u' + Date.now();
     await pool.query(
-      `INSERT INTO products (id, name_pt, name_en, store, category, price, old_price, rating, reviews, url, image_url)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`,
+      `INSERT INTO products (id, name_pt, name_en, store, category, price, old_price, rating, reviews, url, image_url, description)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,
       [id, p.name, p.nameEn || p.name, p.store, p.category || 'tech',
-       p.price, p.oldPrice || null, p.rating || 4.5, p.reviews || 0, p.url || '', p.imageUrl || '']
+       p.price, p.oldPrice || null, p.rating || 4.5, p.reviews || 0, p.url || '', p.imageUrl || '', p.desc || p.description || '']
     );
     const { rows } = await pool.query('SELECT * FROM products WHERE id=$1', [id]);
     res.status(201).json(dbToProduct(rows[0]));
@@ -106,11 +106,11 @@ app.put('/api/products/:id', auth, async (req, res) => {
     const p = req.body;
     await pool.query(
       `UPDATE products SET name_pt=$1, name_en=$2, store=$3, category=$4,
-       price=$5, old_price=$6, rating=$7, reviews=$8, url=$9, image_url=$10
-       WHERE id=$11`,
+       price=$5, old_price=$6, rating=$7, reviews=$8, url=$9, image_url=$10, description=$11
+       WHERE id=$12`,
       [p.name, p.nameEn || p.name, p.store, p.category || 'tech',
        p.price, p.oldPrice || null, p.rating || 4.5, p.reviews || 0,
-       p.url || '', p.imageUrl || '', req.params.id]
+       p.url || '', p.imageUrl || '', p.desc || p.description || '', req.params.id]
     );
     const { rows } = await pool.query('SELECT * FROM products WHERE id=$1', [req.params.id]);
     if (!rows[0]) return res.status(404).json({ error: 'Produto não encontrado' });
@@ -252,7 +252,9 @@ function dbToProduct(row) {
     reviews:  row.reviews,
     url:      row.url,
     imageUrl: row.image_url,
-    image:    row.image_url,  // alias para compatibilidade com frontend
+    image:    row.image_url,
+    desc:     row.description || '',
+    description: row.description || '',
     createdAt: row.created_at,
   };
 }

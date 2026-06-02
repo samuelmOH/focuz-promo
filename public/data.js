@@ -15,17 +15,27 @@ window.FOCUZ_STORES = [
 window.FOCUZ_STORE_MAP = Object.fromEntries(window.FOCUZ_STORES.map(s => [s.id, s]));
 
 window.FOCUZ_CATEGORIES = [
-  { id: 'all',         pt: 'Todos',          en: 'All' },
-  { id: 'tech',        pt: 'Tecnologia',     en: 'Technology' },
-  { id: 'smartphones', pt: 'Smartphones',    en: 'Smartphones' },
-  { id: 'computing',   pt: 'Informática',    en: 'Computing' },
-  { id: 'home',        pt: 'Casa',           en: 'Home' },
+  { id: 'all',         pt: 'Todos',            en: 'All' },
+  { id: 'tech',        pt: 'Tecnologia',       en: 'Technology' },
+  { id: 'smartphones', pt: 'Smartphones',      en: 'Smartphones' },
+  { id: 'computing',   pt: 'Informática',      en: 'Computing' },
+  { id: 'home',        pt: 'Casa',             en: 'Home' },
   { id: 'appliances',  pt: 'Eletrodomésticos', en: 'Appliances' },
-  { id: 'automation',  pt: 'Automação',      en: 'Automation' },
-  { id: 'tools',       pt: 'Ferramentas',    en: 'Tools' },
-  { id: 'games',       pt: 'Games',          en: 'Games' },
-  { id: 'office',      pt: 'Escritório',     en: 'Office' },
-  { id: 'fashion',     pt: 'Moda',           en: 'Fashion' },
+  { id: 'automation',  pt: 'Automação',        en: 'Automation' },
+  { id: 'tools',       pt: 'Ferramentas',      en: 'Tools' },
+  { id: 'games',       pt: 'Games',            en: 'Games' },
+  { id: 'office',      pt: 'Escritório',       en: 'Office' },
+  { id: 'fashion',     pt: 'Moda',             en: 'Fashion' },
+  { id: 'stationery',  pt: 'Papelaria',        en: 'Stationery' },
+  { id: 'sports',      pt: 'Esportes',         en: 'Sports' },
+  { id: 'beauty',      pt: 'Beleza',           en: 'Beauty' },
+  { id: 'kids',        pt: 'Infantil',         en: 'Kids' },
+  { id: 'pets',        pt: 'Pets',             en: 'Pets' },
+  { id: 'food',        pt: 'Alimentos',        en: 'Food' },
+  { id: 'health',      pt: 'Saúde',            en: 'Health' },
+  { id: 'automotive',  pt: 'Automotivo',       en: 'Automotive' },
+  { id: 'books',       pt: 'Livros',           en: 'Books' },
+  { id: 'music',       pt: 'Música',           en: 'Music' },
 ];
 
 window.FOCUZ_CAT_MAP = Object.fromEntries(window.FOCUZ_CATEGORIES.map(c => [c.id, c]));

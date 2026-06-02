@@ -23,6 +23,9 @@ function AdminLogin({ L, onLogin, onBack }) {
         <div className="blob blob--1" /><div className="blob blob--2" />
       </div>
       <form className="login__card" onSubmit={submit}>
+        <div className="login__logo">
+          <span className="focuz-logo" style={{ height: 36, width: Math.round(36 * 4.231), display: 'block' }} role="img" aria-label="Proruja" />
+        </div>
         <h1 className="login__title">{L.login_title}</h1>
         <p className="login__sub">{L.login_sub}</p>
 
@@ -149,7 +152,7 @@ function ProductsTable({ L, lang, products, onEdit, onDelete, onNew }) {
 }
 
 /* ---------------- Product Form (+ URL import) ---------------- */
-const blank = { name: '', name_en: '', desc: '', category: 'tech', store: 'amazon', price: '', oldPrice: '', image: '', url: '' };
+const blank = { name: '', name_en: '', desc: '', description: '', category: 'tech', store: 'amazon', price: '', oldPrice: '', image: '', url: '' };
 
 function ProductForm({ L, lang, editing, onSave, onCancel }) {
   const editingNorm = editing ? { ...editing, image: editing.image || editing.imageUrl || '' } : null;

@@ -68,9 +68,7 @@ function TopNav({ L, lang, setLang, theme, toggleTheme, screen, go }) {
           <button className="iconbtn" onClick={() => setLang(lang === 'pt' ? 'en' : 'pt')} title="Language">
             <span className="mono nav__lang">{lang.toUpperCase()}</span>
           </button>
-          <button className="iconbtn" onClick={toggleTheme} title="Theme">
-            <Icon name={theme === 'dark' ? 'sun' : 'moon'} size={18} />
-          </button>
+
           <button className="btn btn--primary nav__admin" onClick={() => go('admin')}>
             <Icon name="lock" size={15} /> {L.nav_admin}
           </button>
@@ -271,7 +269,91 @@ function StoreSidebar({ L, lang, store, setStore, category, setCategory, product
 }
 
 /* ============================ PRODUCT CARD ============================ */
-function ProductCard({ p, L, lang, tw, i = 0 }) {
+
+/* ============================ PRODUCT MODAL ============================ */
+function ProductModal({ p, L, lang, onClose }) {
+  const store = window.FOCUZ_STORE_MAP[p.store];
+  const cat = window.FOCUZ_CAT_MAP[p.category];
+  const disc = discountPct(p.price, p.oldPrice);
+  const name = lang === 'en' && p.name_en ? p.name_en : p.name;
+  const imgSrc = p.imageUrl || p.image || null;
+  const ageBadge = (() => {
+    if (!p.createdAt) return null;
+    const ageH = (Date.now() - new Date(p.createdAt).getTime()) / 3600000;
+    if (ageH < 3) return { label: 'Novo', cls: 'card__timebadge card__timebadge--new' };
+    if (ageH >= 42) return { label: 'Expirando', cls: 'card__timebadge card__timebadge--exp' };
+    return null;
+  })();
+
+  // Fechar com ESC ou clique no overlay
+  useEffect(() => {
+    const fn = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', fn);
+    document.body.style.overflow = 'hidden';
+    return () => { document.removeEventListener('keydown', fn); document.body.style.overflow = ''; };
+  }, []);
+
+  return (
+    <div className="pmodal__overlay" onClick={onClose}>
+      <div className="pmodal" onClick={(e) => e.stopPropagation()}>
+        <button className="pmodal__close" onClick={onClose} aria-label="Fechar">✕</button>
+
+        <div className="pmodal__media">
+          {imgSrc
+            ? <img src={imgSrc} alt={name} onError={(e) => e.target.style.display='none'} />
+            : <div className="pmodal__placeholder"><span>{store.short}</span></div>}
+          {disc > 0 && <span className="card__disc mono pmodal__disc">-{disc}%</span>}
+          {ageBadge && <span className={ageBadge.cls + ' pmodal__badge'}>{ageBadge.label}</span>}
+        </div>
+
+        <div className="pmodal__body">
+          <div className="pmodal__meta">
+            <StoreLogo store={p.store} size={22} />
+            <span className="pmodal__cat mono">{cat[lang]}</span>
+          </div>
+
+          <h2 className="pmodal__name">{name}</h2>
+
+          {(p.desc || p.description) && (
+            <p className="pmodal__desc">{p.desc || p.description}</p>
+          )}
+
+          {p.rating && (
+            <div className="pmodal__rating">
+              {'★★★★★'.slice(0, Math.round(p.rating))}{'☆☆☆☆☆'.slice(0, 5 - Math.round(p.rating))}
+              <b>{Number(p.rating).toFixed(1)}</b>
+              <span>· {p.reviews?.toLocaleString('pt-BR')} avaliações</span>
+            </div>
+          )}
+
+          <div className="pmodal__pricing">
+            {p.oldPrice > p.price && (
+              <span className="pmodal__old">{fmtBRL(p.oldPrice)}</span>
+            )}
+            <span className="pmodal__price">{fmtBRL(p.price)}</span>
+            {disc > 0 && <span className="pmodal__saving">Economia de {fmtBRL(p.oldPrice - p.price)}</span>}
+          </div>
+
+          <a
+            className="btn btn--primary btn--lg pmodal__buy"
+            href={p.url || '#'}
+            target={p.url && p.url !== '#' ? '_blank' : undefined}
+            rel="noopener noreferrer"
+            onClick={onClose}
+          >
+            Comprar agora
+          </a>
+
+          <p className="pmodal__disclaimer">
+            Você será redirecionado para {store.name}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ProductCard({ p, L, lang, tw, i = 0, onOpenModal }) {
   const ref = useRef(null);
   const store = window.FOCUZ_STORE_MAP[p.store];
   const cat = window.FOCUZ_CAT_MAP[p.category];
@@ -299,7 +381,8 @@ function ProductCard({ p, L, lang, tw, i = 0 }) {
 
   return (
     <article className={'card card--' + tw.cardStyle} ref={ref} onMouseMove={onMove} onMouseLeave={onLeave}
-      style={{ '--i': Math.min(i, 18) }}>
+      style={{ '--i': Math.min(i, 18), cursor: 'pointer' }}
+      onClick={() => onOpenModal && onOpenModal(p)}>
       <div className="card__media">
         {imgSrc
           ? <img src={imgSrc} alt={name} loading="lazy" onError={(e) => { e.target.style.display = 'none'; }} />
@@ -323,7 +406,8 @@ function ProductCard({ p, L, lang, tw, i = 0 }) {
             {p.oldPrice > p.price && <span className="card__old">{fmtBRL(p.oldPrice)}</span>}
             <span className="card__price">{fmtBRL(p.price)}</span>
           </div>
-          <a className="card__buy" href={p.url || '#'} target={p.url && p.url !== '#' ? '_blank' : undefined} rel="noopener noreferrer">
+          <a className="card__buy" href={p.url || '#'} target={p.url && p.url !== '#' ? '_blank' : undefined} rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}>
             {L.buy} <Icon name="cart" size={15} />
           </a>
         </div>
@@ -335,6 +419,7 @@ function ProductCard({ p, L, lang, tw, i = 0 }) {
 /* ============================ PRODUCT GRID ============================ */
 function ProductGrid({ L, lang, tw, store, products, query, setQuery, category }) {
   const [sort, setSort] = useState('relevance');
+  const [modalProduct, setModalProduct] = useState(null);
 
   let list = products.filter((p) => {
     if (store !== 'all' && p.store !== store) return false;
@@ -394,10 +479,13 @@ function ProductGrid({ L, lang, tw, store, products, query, setQuery, category }
         </div>
       ) : (
         <div className={'grid grid--' + tw.density + (entering ? ' is-entering' : '')}>
-          {list.map((p, i) => <ProductCard key={p.id} p={p} L={L} lang={lang} tw={tw} i={i} />)}
+          {list.map((p, i) => <ProductCard key={p.id} p={p} L={L} lang={lang} tw={tw} i={i} onOpenModal={setModalProduct} />)}
         </div>
       )}
     </section>
+    {modalProduct && (
+      <ProductModal p={modalProduct} L={L} lang={lang} onClose={() => setModalProduct(null)} />
+    )}
   );
 }
 

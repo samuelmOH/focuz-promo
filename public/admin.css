@@ -162,3 +162,9 @@
   .ptable th:nth-child(3),
   .ptable td:nth-child(3) { display: none; }
 }
+
+/* Login logo */
+.login__logo {
+  display: flex; justify-content: center;
+  margin-bottom: 20px;
+}
