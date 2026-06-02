@@ -156,7 +156,8 @@ function ProductsTable({ L, lang, products, onEdit, onDelete, onNew }) {
 const blank = { name: '', name_en: '', desc: '', category: 'tech', store: 'amazon', price: '', oldPrice: '', image: '', url: '' };
 
 function ProductForm({ L, lang, editing, onSave, onCancel }) {
-  const [f, setF] = aUseState(editing ? { ...blank, ...editing } : { ...blank });
+  const editingNorm = editing ? { ...editing, image: editing.image || editing.imageUrl || '' } : null;
+  const [f, setF] = aUseState(editingNorm ? { ...blank, ...editingNorm } : { ...blank });
   const [importUrl, setImportUrl] = aUseState('');
   const [importing, setImporting] = aUseState(false);
   const [flash, setFlash] = aUseState('');

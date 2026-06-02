@@ -408,3 +408,54 @@ select optgroup { background-color: var(--surface); color: var(--ink); }
   .hero { padding: 80px 20px 60px; }
   .hero__stats { gap: 16px; padding: 14px 18px; }
 }
+
+/* ============================================================
+   MOBILE RESPONSIVENESS — 480px e abaixo
+   ============================================================ */
+@media (max-width: 480px) {
+  /* Nav */
+  .nav__inner { padding: 0 16px; }
+  .brand { font-size: 18px; }
+
+  /* Hero */
+  .hero { padding: 70px 16px 48px; }
+  .hero__title { font-size: clamp(28px, 8vw, 42px); }
+  .hero__sub { font-size: 15px; }
+  .hero__stats { flex-direction: column; gap: 10px; padding: 14px 16px; }
+  .hero__stat { flex-direction: row; gap: 10px; align-items: center; }
+  .hero__visual { min-height: 240px; }
+
+  /* Store grid — 1 coluna no mobile */
+  .grid { grid-template-columns: 1fr !important; gap: 12px; }
+
+  /* Cards */
+  .card { flex-direction: row; align-items: center; gap: 12px; padding: 12px; }
+  .card__img { width: 90px; height: 90px; flex-shrink: 0; border-radius: 10px; }
+  .card__body { flex: 1; min-width: 0; padding: 0; }
+  .card__name { font-size: 13px; -webkit-line-clamp: 2; }
+  .card__price { font-size: 16px; }
+  .card__old { font-size: 12px; }
+  .card__foot { margin-top: 8px; }
+  .card__btn { padding: 7px 12px; font-size: 12px; }
+
+  /* Shell (sidebar + content) */
+  .shell { padding: 12px 16px 48px; gap: 16px; }
+  .sidebar { gap: 14px; }
+  .storepicker, .catfilter { min-width: 100%; }
+  .catfilter__list { gap: 6px; }
+  .chip { font-size: 12px; padding: 6px 12px; }
+
+  /* Footer */
+  .footer__inner { flex-direction: column; text-align: center; gap: 12px; }
+
+  /* How section */
+  .how { padding: 48px 16px 64px; }
+  .how__steps { grid-template-columns: 1fr; gap: 16px; }
+  .howstep { padding: 20px 16px; }
+}
+
+/* Tablet — 2 colunas */
+@media (min-width: 481px) and (max-width: 768px) {
+  .grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .shell { padding: 16px 20px 48px; }
+}
