@@ -123,12 +123,14 @@ function App() {
   }, []);
 
   const addProduct = async (p) => {
-    const created = await window.apiRequest('POST', '/products', p);
-    if (created) setProducts((list) => [created, ...list]);
+    const payload = { ...p, imageUrl: p.imageUrl || p.image || '' };
+    const created = await window.apiRequest('POST', '/products', payload);
+    if (created) setProducts((list) => [{ ...created, image: created.imageUrl }, ...list]);
   };
   const updateProduct = async (p) => {
-    const updated = await window.apiRequest('PUT', `/products/${p.id}`, p);
-    if (updated) setProducts((list) => list.map((x) => (x.id === p.id ? updated : x)));
+    const payload = { ...p, imageUrl: p.imageUrl || p.image || '' };
+    const updated = await window.apiRequest('PUT', `/products/${p.id}`, payload);
+    if (updated) setProducts((list) => list.map((x) => (x.id === p.id ? { ...updated, image: updated.imageUrl } : x)));
   };
   const deleteProduct = async (p) => {
     await window.apiRequest('DELETE', `/products/${p.id}`);
