@@ -45,8 +45,7 @@ function AdminLogin({ L, onLogin, onBack }) {
           {busy ? <span className="spin" /> : null} {L.login_btn}
         </button>
 
-        <div className="login__hint mono">{L.login_hint}</div>
-        <div className="login__secure"><Icon name="shield" size={13} /> {L.login_secure}</div>
+
         <button type="button" className="login__back" onClick={onBack}>
           <Icon name="chevron" size={14} style={{ transform: 'rotate(90deg)' }} /> {L.login_back}
         </button>
