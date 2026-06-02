@@ -168,3 +168,42 @@
   display: flex; justify-content: center;
   margin-bottom: 20px;
 }
+
+/* ── Product Form mobile completo ── */
+@media (max-width: 600px) {
+  .pform {
+    display: flex; flex-direction: column; gap: 0;
+  }
+  .pform__main { width: 100%; }
+  .pform__side { display: none; }
+  .pform__grid {
+    grid-template-columns: 1fr !important;
+    padding: 4px 14px 0;
+  }
+  .field--half { grid-column: span 1 !important; }
+  .pform__actions {
+    padding: 14px 14px;
+    flex-direction: column; gap: 8px;
+  }
+  .pform__actions .btn { width: 100%; justify-content: center; }
+  .pform__flash { margin: 10px 14px 0; }
+  .import__row {
+    flex-direction: column; gap: 8px;
+  }
+  .import__row input { width: 100%; }
+  .import__row .btn { width: 100%; justify-content: center; }
+  .panel { border-radius: 12px; }
+  .panel__head { padding: 14px 14px 10px; }
+  .field__wrap input,
+  .field__wrap select,
+  .field__wrap textarea {
+    font-size: 16px; /* evita zoom no iOS */
+  }
+  /* Preço e preço antigo lado a lado no mobile */
+  .pform__grid .field:nth-child(3),
+  .pform__grid .field:nth-child(4) {
+    display: inline-block; width: calc(50% - 6px);
+    vertical-align: top;
+  }
+  .pform__grid .field:nth-child(3) { margin-right: 8px; }
+}
