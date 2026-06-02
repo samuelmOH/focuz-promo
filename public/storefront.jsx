@@ -290,7 +290,12 @@ function ProductModal({ p, L, lang, onClose }) {
     const fn = (e) => { if (e.key === 'Escape') onClose(); };
     document.addEventListener('keydown', fn);
     document.body.style.overflow = 'hidden';
-    return () => { document.removeEventListener('keydown', fn); document.body.style.overflow = ''; };
+    document.body.classList.add('modal-open');
+    return () => {
+      document.removeEventListener('keydown', fn);
+      document.body.style.overflow = '';
+      document.body.classList.remove('modal-open');
+    };
   }, []);
 
   return (

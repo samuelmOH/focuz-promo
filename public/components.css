@@ -326,7 +326,7 @@ select optgroup { background-color: var(--surface); color: var(--ink); }
   position: relative; background: var(--surface); border-radius: var(--radius);
   border: 1px solid var(--line); overflow: hidden;
   transition: box-shadow .3s, transform .25s cubic-bezier(.2,.7,.3,1), border-color .3s;
-  transform-style: preserve-3d; box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-sm);
 }
 .card:hover { box-shadow: var(--shadow-lg); border-color: var(--line-2); }
 .card--glass { background: color-mix(in oklch, var(--surface) 78%, transparent); backdrop-filter: blur(10px); border-color: color-mix(in oklch, var(--line-2) 80%, transparent); }
@@ -724,4 +724,14 @@ select optgroup { background-color: var(--surface); color: var(--ink); }
   .pmodal__name { font-size: 16px; }
   .pmodal__price { font-size: 24px; }
   .pmodal__desc { max-height: 100px; }
+}
+
+/* Modal aberto — desativa efeitos 3D dos cards */
+body.modal-open .card {
+  transform: none !important;
+  transform-style: flat !important;
+  will-change: auto !important;
+}
+body.modal-open .grid {
+  transform-style: flat !important;
 }
