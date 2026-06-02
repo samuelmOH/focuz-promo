@@ -327,10 +327,12 @@ select optgroup { background-color: var(--surface); color: var(--ink); }
   border: 1px solid var(--line); overflow: hidden;
   transition: box-shadow .3s, transform .25s cubic-bezier(.2,.7,.3,1), border-color .3s;
   box-shadow: var(--shadow-sm);
+  isolation: isolate;
+  contain: layout style;
 }
 .card:hover { box-shadow: var(--shadow-lg); border-color: var(--line-2); }
 .card--glass { background: color-mix(in oklch, var(--surface) 78%, transparent); backdrop-filter: blur(10px); border-color: color-mix(in oklch, var(--line-2) 80%, transparent); }
-.card--editorial { border-radius: 6px; border-color: var(--accent); }
+
 .card__media { position: relative; }
 .card__media img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; }
 .card__disc { position: absolute; top: 12px; left: 12px; background: var(--accent); color: var(--accent-ink); font-size: 12px; font-weight: 600; padding: 4px 9px; border-radius: 8px; box-shadow: var(--shadow-sm); }
@@ -580,12 +582,11 @@ select optgroup { background-color: var(--surface); color: var(--ink); }
    ============================================================ */
 .pmodal__overlay {
   position: fixed; inset: 0; z-index: 9999;
-  background: rgba(0,0,0,.85);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(0,0,0,.92);
   display: flex; align-items: center; justify-content: center;
   padding: 20px;
   animation: pmFadeIn .15s ease;
+  isolation: isolate;
 }
 @keyframes pmFadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes pmSlideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -726,12 +727,13 @@ select optgroup { background-color: var(--surface); color: var(--ink); }
   .pmodal__desc { max-height: 100px; }
 }
 
-/* Modal aberto — desativa efeitos 3D dos cards */
-body.modal-open .card {
+/* Modal aberto — remove qualquer transform e shadow dos cards */
+body.modal-open .card,
+body.modal-open .card--editorial,
+body.modal-open .card--glass,
+body.modal-open .card--soft {
   transform: none !important;
-  transform-style: flat !important;
+  box-shadow: none !important;
+  transition: none !important;
   will-change: auto !important;
-}
-body.modal-open .grid {
-  transform-style: flat !important;
 }

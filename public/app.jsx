@@ -66,23 +66,20 @@ const hashToScreen = () => {
 function App() {
   const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
 
-  /* theme: follow system + manual override */
-  const [theme, setTheme] = tUseState(() => {
-    const saved = localStorage.getItem('focuz_theme');
-    if (saved) return saved;
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  });
+  /* tema fixo: sempre dark */
+  const theme = 'dark';
+  const toggleTheme = () => {};
   tUseEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('focuz_theme', theme);
-  }, [theme]);
-  tUseEffect(() => {
-    const mq = window.matchMedia('(prefers-color-scheme: dark)');
-    const fn = (e) => { if (!localStorage.getItem('focuz_theme_manual')) setTheme(e.matches ? 'dark' : 'light'); };
-    mq.addEventListener('change', fn);
-    return () => mq.removeEventListener('change', fn);
+    document.documentElement.setAttribute('data-theme', 'dark');
+    localStorage.removeItem('focuz_theme');
+    localStorage.removeItem('focuz_theme_manual');
+    // Forçar cardStyle para soft (remove editorial que causava barra azul)
+    const tweaks = JSON.parse(localStorage.getItem('focuz_tweaks') || '{}');
+    if (tweaks.cardStyle === 'editorial') {
+      tweaks.cardStyle = 'soft';
+      localStorage.setItem('focuz_tweaks', JSON.stringify(tweaks));
+    }
   }, []);
-  const toggleTheme = () => { localStorage.setItem('focuz_theme_manual', '1'); setTheme((x) => (x === 'dark' ? 'light' : 'dark')); };
 
   const [lang, setLang] = tUseState(() => localStorage.getItem('focuz_lang') || 'pt');
   tUseEffect(() => localStorage.setItem('focuz_lang', lang), [lang]);
