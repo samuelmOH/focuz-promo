@@ -62,6 +62,7 @@ function TopNav({ L, lang, setLang, theme, toggleTheme, screen, go }) {
   const links = [
     { id: 'home', label: L.nav_home },
     { id: 'store', label: L.nav_stores },
+    { id: 'coupons', label: 'Cupons' },
     { id: 'how', label: L.nav_how },
   ];
   return (
