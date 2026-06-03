@@ -736,11 +736,10 @@ function AdminApp({ L, lang, setLang, theme, toggleTheme, authed, setAuthed, pro
   const save = (p) => { editing ? updateProduct({ ...editing, ...p }) : addProduct(p); setView('products'); setEditing(null); };
 
   const nav = [
-    { id: 'dash', icon: 'layout', label: 'Analytics' },
-    { id: 'stats', icon: 'grid', label: 'Produtos' },
-    { id: 'products', icon: 'tag', label: L.admin_products },
-    { id: 'coupons', icon: 'spark', label: 'Cupons' },
-    { id: 'form', icon: 'plus', label: L.admin_new },
+    { id: 'dash',     icon: 'layout', label: 'Analytics'   },
+    { id: 'stats',    icon: 'grid',   label: 'Produtos'     },
+    { id: 'products', icon: 'tag',    label: 'Gerenciar'    },
+    { id: 'coupons',  icon: 'spark',  label: 'Cupons'       },
   ];
 
   return (
@@ -791,6 +790,7 @@ function AdminApp({ L, lang, setLang, theme, toggleTheme, authed, setAuthed, pro
           {view === 'dash' && <Dashboard L={L} lang={lang} products={products} />}
           {view === 'stats' && <ProductStats products={products} />}
 
+          {view === 'coupons' && <CouponsPanel />}
           {view === 'products' && <ProductsTable L={L} lang={lang} products={products} onEdit={goEdit} onDelete={deleteProduct} onNew={goNew} onRenew={renewProduct} />}
           {view === 'form' && <ProductForm L={L} lang={lang} editing={editing} onSave={save} onCancel={() => setView('products')} />}
         </div>
