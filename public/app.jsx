@@ -57,7 +57,7 @@ function loadProducts() {
   return [];
 }
 
-const SCREENS = ['home', 'store', 'how', 'admin'];
+const SCREENS = ['home', 'store', 'how', 'admin', 'coupons'];
 const hashToScreen = () => {
   const h = (location.hash || '').replace('#', '');
   return SCREENS.includes(h) ? h : 'home';
@@ -160,6 +160,7 @@ function App() {
       <ScreenWrap animKey={animKey}>
         {screen === 'home' && <Hero L={L} tw={t} stats={{ products: products.length }} onSeeDeals={() => goStore()} onHow={() => go('how')} />}
         {screen === 'how' && <HowItWorks L={L} lang={lang} onSeeDeals={() => goStore()} />}
+        {screen === 'coupons' && <CouponsPage L={L} lang={lang} go={go} />}
         {screen === 'store' && (
           <div className="shell">
             <StoreSidebar L={L} lang={lang} store={store} setStore={setStore} category={category} setCategory={setCategory} products={products} />

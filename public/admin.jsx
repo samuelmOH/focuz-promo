@@ -245,7 +245,7 @@ const STORES_LIST = [
   { id: 'shopee', name: 'Shopee' }, { id: 'magalu', name: 'Magalu' },
   { id: 'ali', name: 'AliExpress' }
 ];
-const blankCpn = { store: 'ml', code: '', description: '', discount: '', minValue: '', expiresAt: '', url: '', active: true };
+const blankCpn = { store: 'ml', code: '', category: '', description: '', discount: '', minValue: '', expiresAt: '', url: '', active: true };
 
 function CouponsPanel() {
   const [coupons, setCoupons] = aUseState([]);
@@ -320,6 +320,17 @@ function CouponsPanel() {
             <div className="field field--full">
               <span className="field__label">Descrição</span>
               <div className="field__wrap"><textarea rows={2} value={form.description} onChange={set('description')} placeholder="Ex: 10% OFF em eletrônicos acima de R$200" /></div>
+            </div>
+            <div className="field">
+              <span className="field__label">Categoria</span>
+              <div className="field__wrap">
+                <select value={form.category||''} onChange={e => setForm(f => ({ ...f, category: e.target.value }))}>
+                  <option value="">Geral</option>
+                  {window.FOCUZ_CATEGORIES.filter(c=>c.id!=='all').map(c=>(
+                    <option key={c.id} value={c.pt}>{c.pt}</option>
+                  ))}
+                </select>
+              </div>
             </div>
             <div className="field">
               <span className="field__label">Ativo</span>
