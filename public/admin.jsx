@@ -82,10 +82,10 @@ function ProductStats({ products }) {
           <div className="dash__card-title">Status dos produtos</div>
           <div style={{display:'flex',flexDirection:'column',gap:'10px',marginTop:'4px'}}>
             {[
-              {label:'Ativos', val: active, color:'#818cf8'},
-              {label:'Novos (< 3h)', val: products.filter(p=>getAge(p)<3).length, color:'#22c55e'},
-              {label:'Expirando (> 42h)', val: expiring, color:'#f97316'},
-              {label:'Expirados', val: expired, color:'#f87171'},
+              {label:L.stats_active, val: active, color:'#818cf8'},
+              {label:L.stats_new, val: products.filter(p=>getAge(p)<3).length, color:'#22c55e'},
+              {label:L.stats_exp, val: expiring, color:'#f97316'},
+              {label:L.stats_expired, val: expired, color:'#f87171'},
             ].map(item => (
               <div key={item.label} className="dash__bar-row">
                 <span className="dash__bar-label">{item.label}</span>
@@ -142,8 +142,8 @@ function Dashboard({ L }) {
     .catch(e => { console.error('Analytics error:', e); setLoading(false); });
   }, []);
 
-  if (loading) return <div className="dash__loading">Carregando dados...</div>;
-  if (!data) return <div className="dash__loading">Erro ao carregar analytics.</div>;
+  if (loading) return <div className="dash__loading">{L.loading || "Loading..."}</div>;
+  if (!data) return <div className="dash__loading">{L.dash_error || "Error loading analytics."}</div>;
 
   const storeNames = { ml: 'Mercado Livre', amazon: 'Amazon', shopee: 'Shopee', magalu: 'Magalu', ali: 'AliExpress' };
 
@@ -198,7 +198,7 @@ function Dashboard({ L }) {
               <span className="dash__prod-rank">#{i + 1}</span>
               {p.image_url && <img src={p.image_url} className="dash__prod-img" alt="" />}
               <div className="dash__prod-info">
-                <div className="dash__prod-name">{p.name || 'Produto removido'}</div>
+                <div className="dash__prod-name">{p.name || L.dash_removed}</div>
                 <div className="dash__prod-store">{storeNames[p.store] || p.store}</div>
               </div>
               <span className="dash__prod-clicks">{p.clicks} cliques</span>
@@ -231,8 +231,8 @@ function Dashboard({ L }) {
           })()}
         </div>
         <div className="dash__legend">
-          <span><i className="dash__dot dash__dot--pv" /> Acessos</span>
-          <span><i className="dash__dot dash__dot--cl" /> Cliques</span>
+          <span><i className="dash__dot dash__dot--pv" /> {L.dash_visits}</span>
+          <span><i className="dash__dot dash__dot--cl" /> {L.dash_clicks_label}</span>
         </div>
       </div>
     </div>
@@ -345,7 +345,7 @@ function CouponsPanel() {
           {msg && <div className="admin__flash admin__flash--err">{msg}</div>}
           <div className="pform__actions">
             <button className="btn btn--ghost" onClick={() => setForm(null)}>Cancelar</button>
-            <button className="btn btn--primary" onClick={save} disabled={busy}>{busy ? 'Salvando...' : 'Salvar cupom'}</button>
+            <button className="btn btn--primary" onClick={save} disabled={busy}>{busy ? 'Salvando...' : L.cpn_save}</button>
           </div>
         </div>
       )}
@@ -453,7 +453,7 @@ function ProductsTable({ L, lang, products, onEdit, onDelete, onNew, onRenew }) 
     return (p.name + ' ' + (p.name_en || '')).toLowerCase().includes(q.toLowerCase());
   });
 
-  const statusLabel = { new: 'Novo', active: 'Ativo', expiring: 'Expirando', expired: 'Expirado' };
+  const statusLabel = { new: L.status_new, active: L.status_active, expiring: L.status_expiring, expired: L.status_expired };
   const statusCls   = { new: 'ptable__status--new', active: 'ptable__status--active', expiring: 'ptable__status--exp', expired: 'ptable__status--dead' };
 
   return (
@@ -495,7 +495,7 @@ function ProductsTable({ L, lang, products, onEdit, onDelete, onNew, onRenew }) 
               <span className="ptable__price">{fmtBRL(p.price)}</span>
               <span className="ptable__act">
                 {status === 'expired'
-                  ? <button className="btn btn--sm btn--ghost" onClick={() => onRenew && onRenew(p)} title="Renovar por mais 48h">Renovar</button>
+                  ? <button className="btn btn--sm btn--ghost" onClick={() => onRenew && onRenew(p)} title="Renovar por mais 48h">{L.tbl_renew}</button>
                   : <button className="iconbtn iconbtn--sm" onClick={() => onEdit(p)} title={L.f_edit}><Icon name="edit" size={15} /></button>
                 }
                 <button className="iconbtn iconbtn--sm iconbtn--danger" onClick={() => onDelete(p)} title={L.f_delete}><Icon name="trash" size={15} /></button>

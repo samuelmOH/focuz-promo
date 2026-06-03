@@ -146,6 +146,29 @@ window.FOCUZ_I18N = {
     saved: 'Produto salvo no catálogo (localStorage).',
     tbl_product: 'Produto', tbl_store: 'Loja', tbl_cat: 'Categoria', tbl_price: 'Preço', tbl_actions: 'Ações',
     search_admin: 'Buscar no catálogo…',
+    // dashboard analytics
+    loading: 'Carregando...', dash_error: 'Erro ao carregar dados.',
+    dash_pageviews: 'Acessos ao site', dash_clicks: 'Cliques em anúncios',
+    dash_ctr: 'Taxa de cliques', dash_prods_clicked: 'Produtos com cliques',
+    dash_by_store: 'Cliques por loja', dash_top_products: 'Top produtos mais clicados',
+    dash_activity: 'Atividade dos últimos 7 dias', dash_no_data: 'Nenhum dado ainda',
+    dash_visits: 'Acessos', dash_clicks_label: 'Cliques',
+    dash_removed: 'Produto removido',
+    // product stats
+    stats_total: 'Total de produtos', stats_today: 'Adicionados hoje',
+    stats_expiring: 'Expirando em breve', stats_avg_disc: 'Desconto médio',
+    stats_by_store: 'Produtos por loja', stats_status: 'Status dos produtos',
+    stats_by_cat: 'Produtos por categoria',
+    stats_active: 'Ativos', stats_new: 'Novos (< 3h)', stats_exp: 'Expirando (> 42h)', stats_expired: 'Expirados',
+    // coupons admin
+    cpn_new: 'Novo cupom', cpn_store: 'Loja', cpn_code: 'Código',
+    cpn_discount: 'Desconto', cpn_min: 'Valor mínimo R$', cpn_expires: 'Expira em',
+    cpn_url: 'URL da loja', cpn_cat: 'Categoria', cpn_active: 'Ativo',
+    cpn_save: 'Salvar cupom', cpn_none: 'Nenhum cupom cadastrado.',
+    cpn_general: 'Geral', cpn_yes: 'Sim', cpn_no: 'Não',
+    // product table
+    tbl_status: 'Status', tbl_renew: 'Renovar',
+    status_new: 'Novo', status_active: 'Ativo', status_expiring: 'Expirando', status_expired: 'Expirado',
   },
   en: {
     nav_home: 'Home', nav_promos: 'Deals', nav_stores: 'Stores', nav_coupons: 'Coupons', nav_admin: 'Admin', nav_how: 'How it works',
@@ -188,5 +211,28 @@ window.FOCUZ_I18N = {
     saved: 'Product saved to catalog (localStorage).',
     tbl_product: 'Product', tbl_store: 'Store', tbl_cat: 'Category', tbl_price: 'Price', tbl_actions: 'Actions',
     search_admin: 'Search catalog…',
+    // dashboard analytics
+    loading: 'Loading...', dash_error: 'Error loading data.',
+    dash_pageviews: 'Site visits', dash_clicks: 'Ad clicks',
+    dash_ctr: 'Click rate', dash_prods_clicked: 'Products with clicks',
+    dash_by_store: 'Clicks by store', dash_top_products: 'Top clicked products',
+    dash_activity: 'Activity — last 7 days', dash_no_data: 'No data yet',
+    dash_visits: 'Visits', dash_clicks_label: 'Clicks',
+    dash_removed: 'Product removed',
+    // product stats
+    stats_total: 'Total products', stats_today: 'Added today',
+    stats_expiring: 'Expiring soon', stats_avg_disc: 'Avg discount',
+    stats_by_store: 'Products by store', stats_status: 'Product status',
+    stats_by_cat: 'Products by category',
+    stats_active: 'Active', stats_new: 'New (< 3h)', stats_exp: 'Expiring (> 42h)', stats_expired: 'Expired',
+    // coupons admin
+    cpn_new: 'New coupon', cpn_store: 'Store', cpn_code: 'Code',
+    cpn_discount: 'Discount', cpn_min: 'Min value R$', cpn_expires: 'Expires at',
+    cpn_url: 'Store URL', cpn_cat: 'Category', cpn_active: 'Active',
+    cpn_save: 'Save coupon', cpn_none: 'No coupons registered.',
+    cpn_general: 'General', cpn_yes: 'Yes', cpn_no: 'No',
+    // product table
+    tbl_status: 'Status', tbl_renew: 'Renew',
+    status_new: 'New', status_active: 'Active', status_expiring: 'Expiring', status_expired: 'Expired',
   },
 };
