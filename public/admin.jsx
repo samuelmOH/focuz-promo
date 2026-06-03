@@ -11,13 +11,19 @@ function Dashboard({ L }) {
   const [loading, setLoading] = aUseState(true);
 
   aUseEffect(() => {
-    const tk = sessionStorage.getItem('focuz_token') || localStorage.getItem('proruja_tk');
+    const tk = sessionStorage.getItem('focuz_token') || localStorage.getItem('proruja_tk') || '';
     fetch('/api/analytics/summary', {
-      headers: { 'Authorization': 'Bearer ' + tk }
-    }).then(r => r.json()).then(d => {
-      if (d.error) { setLoading(false); return; }
-      setData(d); setLoading(false);
-    }).catch(() => setLoading(false));
+      method: 'GET',
+      cache: 'no-store',
+      headers: {
+        'Authorization': 'Bearer ' + tk,
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache'
+      }
+    })
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(d => { setData(d); setLoading(false); })
+    .catch(e => { console.error('Analytics error:', e); setLoading(false); });
   }, []);
 
   if (loading) return <div className="dash__loading">Carregando dados...</div>;
@@ -130,8 +136,8 @@ function CouponsPanel() {
   const [form, setForm] = aUseState(null);
   const [busy, setBusy] = aUseState(false);
   const [msg, setMsg] = aUseState('');
-  const token = sessionStorage.getItem('focuz_token');
-  const headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token };
+  const token = sessionStorage.getItem('focuz_token') || localStorage.getItem('proruja_tk') || '';
+  const headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token, 'Cache-Control': 'no-cache' };
 
   const load = () => fetch('/api/coupons/all', { headers }).then(r => r.json()).then(setCoupons).catch(() => {});
   aUseEffect(() => { load(); }, []);

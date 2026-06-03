@@ -332,6 +332,7 @@ app.post('/api/analytics', async (req, res) => {
 });
 
 app.get('/api/analytics/summary', auth, async (req, res) => {
+  res.set('Cache-Control', 'no-store');
   try {
     const [pageviews, clicks, byStore, byProduct, daily] = await Promise.all([
       pool.query("SELECT COUNT(*) FROM analytics WHERE event='pageview'"),
