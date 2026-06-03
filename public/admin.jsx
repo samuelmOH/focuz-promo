@@ -7,7 +7,7 @@ const { useState: aUseState, useEffect: aUseEffect, useMemo: aUseMemo, useRef: a
 
 
 /* ======================== PRODUCT STATS ======================== */
-function ProductStats({ products }) {
+function ProductStats({ products, L }) {
   const stores = window.FOCUZ_STORES || [];
   const cats = window.FOCUZ_CATEGORIES || [];
 
@@ -247,7 +247,7 @@ const STORES_LIST = [
 ];
 const blankCpn = { store: 'ml', code: '', category: '', description: '', discount: '', minValue: '', expiresAt: '', url: '', active: true };
 
-function CouponsPanel() {
+function CouponsPanel({ L }) {
   const [coupons, setCoupons] = aUseState([]);
   const [form, setForm] = aUseState(null);
   const [busy, setBusy] = aUseState(false);
@@ -788,9 +788,9 @@ function AdminApp({ L, lang, setLang, theme, toggleTheme, authed, setAuthed, pro
         </div>
         <div className="admin__content">
           {view === 'dash' && <Dashboard L={L} lang={lang} products={products} />}
-          {view === 'stats' && <ProductStats products={products} />}
+          {view === 'stats' && <ProductStats products={products} L={L} />}
 
-          {view === 'coupons' && <CouponsPanel />}
+          {view === 'coupons' && <CouponsPanel L={L} />}
           {view === 'products' && <ProductsTable L={L} lang={lang} products={products} onEdit={goEdit} onDelete={deleteProduct} onNew={goNew} onRenew={renewProduct} />}
           {view === 'form' && <ProductForm L={L} lang={lang} editing={editing} onSave={save} onCancel={() => setView('products')} />}
         </div>
