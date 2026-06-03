@@ -145,7 +145,6 @@ app.delete('/api/products/:id', auth, async (req, res) => {
 });
 
 // ── Bot do Mercado Livre ─────────────────────────────────────
-const { runBot } = require('./ml-bot');
 
 // PKCE helpers
 const crypto = require('crypto');
@@ -218,32 +217,6 @@ app.get('/api/ml/callback', async (req, res) => {
   }
 });
 
-// Rota manual — admin dispara o bot na hora
-app.post('/api/ml/run-bot', auth, async (req, res) => {
-  try {
-    const result = await runBot(pool);
-    res.json({ ok: true, ...result });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Cron diário — roda todo dia às 8h (UTC-3 = 11h UTC)
-function startCron() {
-  const INTERVAL_MS = 24 * 60 * 60 * 1000; // 24h
-  const now = new Date();
-  const next = new Date();
-  next.setUTCHours(11, 0, 0, 0);
-  if (next <= now) next.setUTCDate(next.getUTCDate() + 1);
-  const delay = next - now;
-  console.log(`⏰ Bot agendado para ${next.toISOString()} (em ${Math.round(delay/60000)} min)`);
-  setTimeout(() => {
-    runBot(pool).catch(console.error);
-    setInterval(() => runBot(pool).catch(console.error), INTERVAL_MS);
-  }, delay);
-}
-startCron();
 
 // ── Analytics + Cupons ────────────────────────────────────────
 async function initExtraTables() {
