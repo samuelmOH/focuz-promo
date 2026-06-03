@@ -453,8 +453,11 @@ select optgroup { background-color: var(--surface); color: var(--ink); }
   }
   .nav__inner { padding: 4px 10px; height: 46px; justify-content: space-between; }
   .nav__actions { margin-left: auto; }
-  /* Compensar nav fixa */
-  .screen { padding-top: 58px; }
+  /* Compensar nav fixa — só no hero e no shell */
+  .hero { padding-top: calc(clamp(72px, 9vw, 124px) + 58px) !important; }
+  .shell { padding-top: 70px !important; }
+  .how { padding-top: 80px !important; }
+  .coupons-page__hero { padding-top: calc(64px + 58px) !important; }
 
   /* ── HERO ── */
   .hero { padding: 64px 14px 20px; overflow: visible; }
