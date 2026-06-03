@@ -442,37 +442,25 @@ select optgroup { background-color: var(--surface); color: var(--ink); }
    ============================================================ */
 @media (max-width: 600px) {
 
-  /* ── NAV mobile: fixed + glass ── */
+  /* ── NAV mobile ── */
   .nav {
     position: fixed !important;
     top: 0; left: 0; right: 0;
     z-index: 100;
-    padding: 0;
-    background: color-mix(in oklch, var(--bg) 85%, transparent);
-    backdrop-filter: blur(20px) saturate(1.4);
-    -webkit-backdrop-filter: blur(20px) saturate(1.4);
-    border-bottom: 1px solid var(--line);
-    box-shadow: 0 2px 12px rgba(0,0,0,.2);
+    padding: 8px 12px;
   }
   .nav__inner {
-    padding: 0 14px;
-    height: 54px;
+    padding: 4px 14px;
+    height: 44px;
     justify-content: space-between;
-    background: none !important;
-    backdrop-filter: none !important;
-    border: none !important;
-    box-shadow: none !important;
-    border-radius: 0 !important;
     max-width: 100%;
   }
-  .nav__links { display: none; }
   .nav__actions { margin-left: auto; }
-  /* Compensar nav fixa */
-  .screen > *:first-child { margin-top: 0; }
-  .hero { padding-top: calc(clamp(64px, 9vw, 100px) + 54px) !important; }
-  .shell { padding-top: 66px !important; }
-  .how { padding-top: 74px !important; }
-  .coupons-page__hero { padding-top: calc(48px + 54px) !important; }
+  /* Compensar nav fixa — padding-top em cada tela */
+  .hero { padding-top: calc(clamp(64px, 9vw, 100px) + 60px) !important; }
+  .shell { padding-top: 68px !important; }
+  .how { padding-top: 76px !important; }
+  .coupons-page__hero { padding-top: calc(48px + 60px) !important; }
 
   /* ── HERO ── */
   .hero { padding: 64px 14px 20px; overflow: visible; }
@@ -488,7 +476,7 @@ select optgroup { background-color: var(--surface); color: var(--ink); }
   .hero__visual { min-height: 250px; margin-top: 10px; overflow: visible; }
 
   /* ── SHELL ── */
-  .shell { grid-template-columns: 1fr; padding: 10px 10px 60px; gap: 10px; overflow-x: hidden; }
+  .shell { grid-template-columns: 1fr; padding: 10px 10px 60px; gap: 10px; }
 
   /* ── SIDEBAR ── */
   .sidebar { position: static !important; flex-direction: column; gap: 10px; }
