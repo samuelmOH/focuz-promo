@@ -442,18 +442,25 @@ select optgroup { background-color: var(--surface); color: var(--ink); }
    ============================================================ */
 @media (max-width: 600px) {
 
-  /* ── NAV mobile ── */
+  /* ── NAV mobile — fixed + glass arredondado ── */
   .nav {
     position: fixed !important;
     top: 0; left: 0; right: 0;
     z-index: 100;
     padding: 8px 12px;
+    background: transparent !important;
   }
   .nav__inner {
     padding: 4px 14px;
     height: 44px;
     justify-content: space-between;
     max-width: 100%;
+    background: color-mix(in oklch, var(--surface) 75%, transparent) !important;
+    backdrop-filter: blur(18px) saturate(1.4) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(1.4) !important;
+    border: 1px solid var(--line) !important;
+    box-shadow: var(--shadow-md) !important;
+    border-radius: 999px !important;
   }
   .nav__actions { margin-left: auto; }
   /* Compensar nav fixa — padding-top em cada tela */
@@ -463,9 +470,19 @@ select optgroup { background-color: var(--surface); color: var(--ink); }
   .coupons-page__hero { padding-top: calc(48px + 60px) !important; }
 
   /* ── HERO ── */
-  .hero { padding: 74px 16px 28px; overflow: hidden; }
+  .hero { padding: 74px 16px 0; overflow: hidden; }
   .hero__inner { grid-template-columns: 1fr !important; gap: 0; }
-  .hero__visual { display: none !important; }
+  .hero__visual {
+    display: block !important;
+    min-height: 220px;
+    max-height: 260px;
+    overflow: hidden;
+    margin: 16px -16px 0;
+    position: relative;
+  }
+  /* Esconder tiles que vazam fora */
+  .htile { display: none !important; }
+  .hero-bubble { display: none !important; }
   .hero__title { font-size: clamp(26px, 7.5vw, 36px); line-height: 1.2; }
   .hero__sub { font-size: 14px; margin-top: 10px; max-width: 100%; }
   .hero__cta { flex-direction: column; gap: 10px; align-items: stretch; margin-top: 20px; }
