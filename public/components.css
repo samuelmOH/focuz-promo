@@ -453,8 +453,8 @@ select optgroup { background-color: var(--surface); color: var(--ink); }
   }
   .nav__inner { padding: 4px 10px; height: 46px; justify-content: space-between; }
   .nav__actions { margin-left: auto; }
-  /* Compensar a nav fixa */
-  body { padding-top: 58px; }
+  /* Compensar nav fixa */
+  .screen { padding-top: 58px; }
 
   /* ── HERO ── */
   .hero { padding: 64px 14px 20px; overflow: visible; }
