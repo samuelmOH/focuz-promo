@@ -1,24 +1,30 @@
 /* ============================================================
    COUPONS PAGE — tela pública de cupons
    ============================================================ */
-const { useState: cUseState, useEffect: cUseEffect, useCallback: cUseCallback } = React;
+const { useState: cUseState, useEffect: cUseEffect } = React;
+const _fmtBRL = (v) => (window.fmtBRL ? window._fmtBRL(v) : 'R$ ' + Number(v).toFixed(2).replace('.',','));
+const _StoreLogo = (props) => window.StoreLogo ? React.createElement(window.StoreLogo, props) : null;
 
 /* Countdown timer hook */
-function useCountdown(expiresAt) {
-  const calc = () => {
-    if (!expiresAt) return null;
-    const diff = new Date(expiresAt).getTime() - Date.now();
-    if (diff <= 0) return { expired: true, d:0, h:0, m:0, s:0 };
-    const d = Math.floor(diff / 86400000);
-    const h = Math.floor((diff % 86400000) / 3600000);
-    const m = Math.floor((diff % 3600000) / 60000);
-    const s = Math.floor((diff % 60000) / 1000);
-    return { expired: false, d, h, m, s };
+function calcTime(expiresAt) {
+  if (!expiresAt) return null;
+  const diff = new Date(expiresAt).getTime() - Date.now();
+  if (diff <= 0) return { expired: true, d:0, h:0, m:0, s:0 };
+  return {
+    expired: false,
+    d: Math.floor(diff / 86400000),
+    h: Math.floor((diff % 86400000) / 3600000),
+    m: Math.floor((diff % 3600000) / 60000),
+    s: Math.floor((diff % 60000) / 1000)
   };
-  const [time, setTime] = cUseState(calc);
+}
+
+function useCountdown(expiresAt) {
+  const [time, setTime] = cUseState(() => calcTime(expiresAt));
   cUseEffect(() => {
     if (!expiresAt) return;
-    const t = setInterval(() => setTime(calc()), 1000);
+    setTime(calcTime(expiresAt));
+    const t = setInterval(() => setTime(calcTime(expiresAt)), 1000);
     return () => clearInterval(t);
   }, [expiresAt]);
   return time;
@@ -45,7 +51,7 @@ function CouponCard({ c, L, lang }) {
       <div className="coupon__stripe" data-store={c.store} />
 
       <div className="coupon__head">
-        <StoreLogo store={c.store} size={36} />
+        <_StoreLogo store={c.store} size={36} />
         <div className="coupon__storename">{store.name}</div>
         {c.discount && <span className="coupon__discount">{c.discount}</span>}
       </div>
@@ -56,7 +62,7 @@ function CouponCard({ c, L, lang }) {
         )}
         <p className="coupon__desc">{c.description}</p>
         {c.min_value > 0 && (
-          <div className="coupon__minval">Mín. {fmtBRL(parseFloat(c.min_value))}</div>
+          <div className="coupon__minval">Mín. {_fmtBRL(parseFloat(c.min_value))}</div>
         )}
       </div>
 
@@ -134,7 +140,7 @@ function CouponsPage({ L, lang, go }) {
               <button key={s} className={'coupon-filter' + (storeFilter === s ? ' is-active' : '')}
                 onClick={() => setStoreFilter(s)}>
                 {s === 'all' ? 'Todas as lojas' : (
-                  <><StoreLogo store={s} size={18} className="store-logo--bare" />{st?.short || s}</>
+                  <><_StoreLogo store={s} size={18} className="store-logo--bare" />{st?.short || s}</>
                 )}
               </button>
             );
