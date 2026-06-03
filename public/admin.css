@@ -461,3 +461,20 @@
   .ptable__row { font-size: 12px; }
   .ptable th:nth-child(3), .ptable td:nth-child(3) { display: none; }
 }
+
+/* ── Prevenir overflow no admin ── */
+.admin__main { overflow-x: hidden; }
+.dash { overflow-x: hidden; width: 100%; }
+.dash__cols { overflow-x: hidden; }
+.dash__card { overflow: hidden; word-break: break-word; }
+.dash__prod-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 160px; }
+.dash__prod-clicks { white-space: nowrap; }
+
+@media (max-width: 600px) {
+  .admin__main { padding: 10px 10px 80px; overflow-x: hidden; }
+  .dash__kpis { grid-template-columns: 1fr 1fr !important; gap: 8px; }
+  .dash__cols { grid-template-columns: 1fr !important; gap: 8px; }
+  .dash__card--full { grid-column: 1 !important; }
+  .dash__prod-name { max-width: 120px; }
+  .dash__bar-label { width: 80px !important; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+}
