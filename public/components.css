@@ -463,17 +463,13 @@ select optgroup { background-color: var(--surface); color: var(--ink); }
   .coupons-page__hero { padding-top: calc(48px + 60px) !important; }
 
   /* ── HERO ── */
-  .hero { padding: 64px 14px 20px; overflow: visible; }
-    .hero__inner { grid-template-columns: 1fr !important; }
-    .hero__visual { overflow: visible; }
-  .hero__title { font-size: clamp(24px, 7vw, 34px); line-height: 1.2; }
-  .hero__sub { font-size: 14px; margin-top: 12px; max-width: 100%; }
-  .hero__cta { flex-direction: column; gap: 10px; align-items: stretch; }
+  .hero { padding: 74px 16px 28px; overflow: hidden; }
+  .hero__inner { grid-template-columns: 1fr !important; gap: 0; }
+  .hero__visual { display: none !important; }
+  .hero__title { font-size: clamp(26px, 7.5vw, 36px); line-height: 1.2; }
+  .hero__sub { font-size: 14px; margin-top: 10px; max-width: 100%; }
+  .hero__cta { flex-direction: column; gap: 10px; align-items: stretch; margin-top: 20px; }
   .hero__cta .btn { width: 100%; justify-content: center; text-align: center; }
-  .hero__stats { flex-direction: column; gap: 8px; padding: 12px 14px; }
-  .hero__stat { flex-direction: row; gap: 10px; align-items: center; }
-  .hero__stat-val { font-size: 22px; }
-  .hero__visual { min-height: 250px; margin-top: 10px; overflow: visible; }
 
   /* ── SHELL ── */
   .shell { grid-template-columns: 1fr; padding: 10px 10px 60px; gap: 10px; }
