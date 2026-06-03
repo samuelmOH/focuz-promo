@@ -382,3 +382,82 @@
     grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)) !important;
   }
 }
+
+/* ── Admin bottom nav (mobile) ── */
+@media (max-width: 860px) {
+  .admin__nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    top: auto !important;
+    height: auto;
+    width: 100%;
+    flex-direction: row;
+    border-right: none;
+    border-top: 1px solid var(--line);
+    padding: 8px 4px env(safe-area-inset-bottom, 8px);
+    z-index: 100;
+    gap: 0;
+    background: var(--bg);
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  /* Esconder itens que não cabem no bottom nav */
+  .admin__brand,
+  .admin__navfoot,
+  .admin__sep { display: none !important; }
+
+  /* Links como ícone + label */
+  .admin__link {
+    flex: 1;
+    flex-direction: column;
+    gap: 3px;
+    padding: 6px 4px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 600;
+    border: none;
+    min-width: 0;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+  }
+  .admin__link svg { width: 20px; height: 20px; }
+  .admin__link.is-active {
+    background: rgba(99,102,241,.12);
+    color: var(--accent);
+  }
+
+  /* Main com padding bottom para não esconder conteúdo */
+  .admin__main {
+    padding-bottom: 80px;
+    margin-bottom: 0;
+  }
+
+  /* Topbar sem margem excessiva */
+  .admin__topbar { margin-bottom: 12px; }
+
+  /* Dashboard 2 colunas nos KPIs */
+  .dash__kpis { grid-template-columns: 1fr 1fr !important; gap: 8px; }
+  .dash__kpi { padding: 12px; }
+  .dash__kpi-val { font-size: 20px; }
+  .dash__kpi-label { font-size: 11px; }
+
+  /* Cols em coluna única */
+  .dash__cols { grid-template-columns: 1fr !important; }
+  .dash__card { padding: 12px; }
+
+  /* Barra labels menores */
+  .dash__bar-label { width: 90px !important; font-size: 11px; }
+  .dash__bar-count { font-size: 11px; }
+
+  /* Gráfico diário menor */
+  .dash__daily { gap: 4px; height: 80px; }
+  .dash__day-bars { height: 60px; }
+  .dash__day-bar { width: 8px !important; }
+  .dash__day-label { font-size: 9px; }
+
+  /* Tabela de produtos */
+  .ptable__row { font-size: 12px; }
+  .ptable th:nth-child(3), .ptable td:nth-child(3) { display: none; }
+}

@@ -105,7 +105,7 @@ window.FOCUZ_SEED_PRODUCTS = seed.map((p, i) => ({
 /* ---- i18n ---- */
 window.FOCUZ_I18N = {
   pt: {
-    nav_home: 'Início', nav_promos: 'Promoções', nav_stores: 'Lojas', nav_admin: 'Painel', nav_how: 'Como funciona',
+    nav_home: 'Início', nav_promos: 'Promoções', nav_stores: 'Lojas', nav_coupons: 'Cupons', nav_admin: 'Painel', nav_how: 'Como funciona',
     screen_store_eyebrow: 'Vitrine de ofertas',
     how_eyebrow: 'Como funciona', how_title: 'Ofertas reais, sem perder tempo',
     how_intro: 'A Focuz garimpa, organiza e valida promoções das maiores lojas do Brasil — para você comprar melhor em poucos cliques.',
@@ -131,7 +131,7 @@ window.FOCUZ_I18N = {
     login_user: 'Usuário', login_pass: 'Senha', login_btn: 'Entrar', login_back: 'Voltar ao site',
     login_err: 'Usuário ou senha inválidos.', login_hint: 'Demo: admin / focuz2026',
     login_secure: 'Senha verificada por hash SHA-256 (sem texto puro). Segurança real exige o backend: verificação no servidor + bcrypt.',
-    admin_dash: 'Dashboard', admin_products: 'Produtos', admin_new: 'Novo produto',
+    admin_dash: 'Analytics', admin_products: 'Produtos', admin_new: 'Novo produto', admin_manage: 'Gerenciar', admin_coupons: 'Cupons',
     admin_logout: 'Sair', admin_view_site: 'Ver site',
     kpi_total: 'Produtos cadastrados', kpi_stores: 'Lojas ativas', kpi_avg: 'Ticket médio', kpi_disc: 'Desconto médio',
     form_new: 'Cadastrar produto', form_edit: 'Editar produto',
@@ -148,7 +148,7 @@ window.FOCUZ_I18N = {
     search_admin: 'Buscar no catálogo…',
   },
   en: {
-    nav_home: 'Home', nav_promos: 'Deals', nav_stores: 'Stores', nav_admin: 'Admin', nav_how: 'How it works',
+    nav_home: 'Home', nav_promos: 'Deals', nav_stores: 'Stores', nav_coupons: 'Coupons', nav_admin: 'Admin', nav_how: 'How it works',
     screen_store_eyebrow: 'Deals showcase',
     how_eyebrow: 'How it works', how_title: 'Real deals, zero wasted time',
     how_intro: 'Focuz mines, organizes and validates deals from the biggest stores in Brazil — so you buy smarter in a few clicks.',
@@ -173,7 +173,7 @@ window.FOCUZ_I18N = {
     login_user: 'Username', login_pass: 'Password', login_btn: 'Sign in', login_back: 'Back to site',
     login_err: 'Invalid username or password.', login_hint: 'Demo: admin / focuz2026',
     login_secure: 'Password checked via SHA-256 hash (no plaintext). Real security needs the backend: server-side check + bcrypt.',
-    admin_dash: 'Dashboard', admin_products: 'Products', admin_new: 'New product',
+    admin_dash: 'Analytics', admin_products: 'Products', admin_new: 'New product', admin_manage: 'Manage', admin_coupons: 'Coupons',
     admin_logout: 'Log out', admin_view_site: 'View site',
     kpi_total: 'Products', kpi_stores: 'Active stores', kpi_avg: 'Avg. ticket', kpi_disc: 'Avg. discount',
     form_new: 'Add product', form_edit: 'Edit product',

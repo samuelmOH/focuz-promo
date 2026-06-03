@@ -463,7 +463,7 @@ function ProductsTable({ L, lang, products, onEdit, onDelete, onNew, onRenew }) 
           <Icon name="search" size={16} />
           <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={L.search_admin} />
         </label>
-        <button className="btn btn--primary" onClick={onNew}><Icon name="plus" size={16} /> {L.admin_new}</button>
+
       </div>
       <div className="ptable-filters">
         {stores.map((s) => {
@@ -736,10 +736,10 @@ function AdminApp({ L, lang, setLang, theme, toggleTheme, authed, setAuthed, pro
   const save = (p) => { editing ? updateProduct({ ...editing, ...p }) : addProduct(p); setView('products'); setEditing(null); };
 
   const nav = [
-    { id: 'dash',     icon: 'layout', label: 'Analytics'   },
-    { id: 'stats',    icon: 'grid',   label: 'Produtos'     },
-    { id: 'products', icon: 'tag',    label: 'Gerenciar'    },
-    { id: 'coupons',  icon: 'spark',  label: 'Cupons'       },
+    { id: 'dash',     icon: 'layout', label: L.admin_dash          },
+    { id: 'stats',    icon: 'grid',   label: L.admin_products      },
+    { id: 'products', icon: 'tag',    label: L.admin_manage || 'Gerenciar' },
+    { id: 'coupons',  icon: 'spark',  label: L.admin_coupons || 'Cupons'   },
   ];
 
   return (
