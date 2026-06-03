@@ -442,31 +442,37 @@ select optgroup { background-color: var(--surface); color: var(--ink); }
    ============================================================ */
 @media (max-width: 600px) {
 
-  /* ── NAV mobile: fixed + glass sempre ativo ── */
+  /* ── NAV mobile: fixed + glass ── */
   .nav {
     position: fixed !important;
     top: 0; left: 0; right: 0;
-    padding: 6px 10px;
     z-index: 100;
-    background: transparent;
+    padding: 0;
+    background: color-mix(in oklch, var(--bg) 85%, transparent);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 2px 12px rgba(0,0,0,.2);
   }
   .nav__inner {
-    padding: 4px 10px;
-    height: 46px;
+    padding: 0 14px;
+    height: 54px;
     justify-content: space-between;
-    background: color-mix(in oklch, var(--surface) 80%, transparent) !important;
-    backdrop-filter: blur(20px) saturate(1.4) !important;
-    -webkit-backdrop-filter: blur(20px) saturate(1.4) !important;
-    border-color: var(--line) !important;
-    box-shadow: var(--shadow-sm) !important;
-    border-radius: 999px;
+    background: none !important;
+    backdrop-filter: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    max-width: 100%;
   }
+  .nav__links { display: none; }
   .nav__actions { margin-left: auto; }
   /* Compensar nav fixa */
-  .hero { padding-top: calc(clamp(64px, 9vw, 100px) + 58px) !important; }
-  .shell { padding-top: 70px !important; }
-  .how { padding-top: 80px !important; }
-  .coupons-page__hero { padding-top: calc(64px + 58px) !important; }
+  .screen > *:first-child { margin-top: 0; }
+  .hero { padding-top: calc(clamp(64px, 9vw, 100px) + 54px) !important; }
+  .shell { padding-top: 66px !important; }
+  .how { padding-top: 74px !important; }
+  .coupons-page__hero { padding-top: calc(48px + 54px) !important; }
 
   /* ── HERO ── */
   .hero { padding: 64px 14px 20px; overflow: visible; }
