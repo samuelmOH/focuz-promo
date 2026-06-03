@@ -443,9 +443,18 @@ select optgroup { background-color: var(--surface); color: var(--ink); }
 @media (max-width: 600px) {
 
   /* ── NAV ── */
-  .nav { padding: 6px 10px; }
+  .nav {
+    position: fixed !important;
+    top: 0; left: 0; right: 0;
+    padding: 6px 10px;
+    z-index: 100;
+    background: var(--bg) !important;
+    border-bottom: 1px solid var(--line);
+  }
   .nav__inner { padding: 4px 10px; height: 46px; justify-content: space-between; }
   .nav__actions { margin-left: auto; }
+  /* Compensar a nav fixa */
+  body { padding-top: 58px; }
 
   /* ── HERO ── */
   .hero { padding: 64px 14px 20px; overflow: visible; }
