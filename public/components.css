@@ -442,19 +442,28 @@ select optgroup { background-color: var(--surface); color: var(--ink); }
    ============================================================ */
 @media (max-width: 600px) {
 
-  /* ── NAV ── */
+  /* ── NAV mobile: fixed + glass sempre ativo ── */
   .nav {
     position: fixed !important;
     top: 0; left: 0; right: 0;
     padding: 6px 10px;
     z-index: 100;
-    background: var(--bg) !important;
-    border-bottom: 1px solid var(--line);
+    background: transparent;
   }
-  .nav__inner { padding: 4px 10px; height: 46px; justify-content: space-between; }
+  .nav__inner {
+    padding: 4px 10px;
+    height: 46px;
+    justify-content: space-between;
+    background: color-mix(in oklch, var(--surface) 80%, transparent) !important;
+    backdrop-filter: blur(20px) saturate(1.4) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(1.4) !important;
+    border-color: var(--line) !important;
+    box-shadow: var(--shadow-sm) !important;
+    border-radius: 999px;
+  }
   .nav__actions { margin-left: auto; }
-  /* Compensar nav fixa — só no hero e no shell */
-  .hero { padding-top: calc(clamp(72px, 9vw, 124px) + 58px) !important; }
+  /* Compensar nav fixa */
+  .hero { padding-top: calc(clamp(64px, 9vw, 100px) + 58px) !important; }
   .shell { padding-top: 70px !important; }
   .how { padding-top: 80px !important; }
   .coupons-page__hero { padding-top: calc(64px + 58px) !important; }
