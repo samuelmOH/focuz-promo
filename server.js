@@ -30,6 +30,9 @@ app.use((req, res, next) => {
 });
 app.use(express.json());
 
+// Iniciar servidor IMEDIATAMENTE para Railway não matar por timeout
+app.listen(PORT, () => console.log(`✅ Proruja backend na porta ${PORT}`));
+
 // Serve os arquivos estáticos do frontend (pasta public/)
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -414,4 +417,3 @@ app.delete('/api/products/expired', auth, async (req, res) => {
 
 
 // ── Start ─────────────────────────────────────────────────────
-app.listen(PORT, () => console.log(`✅ Focuz backend rodando na porta ${PORT}`));
