@@ -5,6 +5,122 @@
 const { useState: aUseState, useEffect: aUseEffect, useMemo: aUseMemo, useRef: aUseRef } = React;
 
 
+
+/* ======================== PRODUCT STATS ======================== */
+function ProductStats({ products }) {
+  const stores = window.FOCUZ_STORES || [];
+  const cats = window.FOCUZ_CATEGORIES || [];
+
+  const getAge = (p) => p.createdAt ? (Date.now() - new Date(p.createdAt).getTime()) / 3600000 : 0;
+
+  const total = products.length;
+  const active = products.filter(p => getAge(p) < 42).length;
+  const expiring = products.filter(p => getAge(p) >= 42 && getAge(p) < 48).length;
+  const expired = products.filter(p => getAge(p) >= 48).length;
+  const newToday = products.filter(p => getAge(p) < 24).length;
+
+  const byStore = stores.filter(s => s.id !== 'all').map(s => ({
+    ...s,
+    count: products.filter(p => p.store === s.id).length
+  })).filter(s => s.count > 0).sort((a,b) => b.count - a.count);
+
+  const byCat = cats.filter(c => c.id !== 'all').map(c => ({
+    ...c,
+    count: products.filter(p => p.category === c.id).length
+  })).filter(c => c.count > 0).sort((a,b) => b.count - a.count);
+
+  const avgDiscount = products.filter(p => p.oldPrice > p.price).reduce((acc, p) => {
+    return acc + Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100);
+  }, 0) / (products.filter(p => p.oldPrice > p.price).length || 1);
+
+  const maxStore = byStore[0]?.count || 1;
+  const maxCat = byCat[0]?.count || 1;
+
+  return (
+    <div className="dash">
+      {/* KPIs */}
+      <div className="dash__kpis">
+        <div className="dash__kpi">
+          <div className="dash__kpi-val">{total}</div>
+          <div className="dash__kpi-label">Total de produtos</div>
+        </div>
+        <div className="dash__kpi">
+          <div className="dash__kpi-val" style={{color:'#22c55e'}}>{newToday}</div>
+          <div className="dash__kpi-label">Adicionados hoje</div>
+        </div>
+        <div className="dash__kpi">
+          <div className="dash__kpi-val" style={{color:'#f97316'}}>{expiring}</div>
+          <div className="dash__kpi-label">Expirando em breve</div>
+        </div>
+        <div className="dash__kpi">
+          <div className="dash__kpi-val" style={{color:'var(--accent)'}}>{Math.round(avgDiscount)}%</div>
+          <div className="dash__kpi-label">Desconto médio</div>
+        </div>
+      </div>
+
+      <div className="dash__cols">
+        {/* Por loja */}
+        <div className="dash__card">
+          <div className="dash__card-title">Produtos por loja</div>
+          {byStore.length === 0 && <p className="dash__empty">Nenhum produto</p>}
+          {byStore.map(s => (
+            <div key={s.id} className="dash__bar-row">
+              <span className="dash__bar-label" style={{display:'flex',alignItems:'center',gap:'6px'}}>
+                <StoreLogo store={s.id} size={18} className="store-logo--bare" />
+                {s.short}
+              </span>
+              <div className="dash__bar-track">
+                <div className="dash__bar-fill" style={{width: (s.count/maxStore*100)+'%'}} />
+              </div>
+              <span className="dash__bar-count">{s.count}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Status */}
+        <div className="dash__card">
+          <div className="dash__card-title">Status dos produtos</div>
+          <div style={{display:'flex',flexDirection:'column',gap:'10px',marginTop:'4px'}}>
+            {[
+              {label:'Ativos', val: active, color:'#818cf8'},
+              {label:'Novos (< 3h)', val: products.filter(p=>getAge(p)<3).length, color:'#22c55e'},
+              {label:'Expirando (> 42h)', val: expiring, color:'#f97316'},
+              {label:'Expirados', val: expired, color:'#f87171'},
+            ].map(item => (
+              <div key={item.label} className="dash__bar-row">
+                <span className="dash__bar-label">{item.label}</span>
+                <div className="dash__bar-track">
+                  <div className="dash__bar-fill" style={{width: total ? (item.val/total*100)+'%' : '0%', background: item.color}} />
+                </div>
+                <span className="dash__bar-count">{item.val}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Por categoria */}
+      <div className="dash__card dash__card--full">
+        <div className="dash__card-title">Produtos por categoria</div>
+        {byCat.length === 0 && <p className="dash__empty">Nenhum produto</p>}
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(180px,1fr))',gap:'8px',marginTop:'4px'}}>
+          {byCat.map(c => (
+            <div key={c.id} style={{display:'flex',alignItems:'center',gap:'8px',padding:'8px 12px',background:'var(--surface)',borderRadius:'10px',border:'1px solid var(--line)'}}>
+              <div style={{flex:1}}>
+                <div style={{fontSize:'13px',fontWeight:600}}>{c.pt}</div>
+                <div style={{fontSize:'11px',color:'var(--ink-3)',marginTop:'2px'}}>
+                  <div style={{width: (c.count/maxCat*100)+'%',height:'3px',background:'var(--accent)',borderRadius:'2px',marginTop:'4px'}} />
+                </div>
+              </div>
+              <span style={{fontSize:'18px',fontWeight:800,color:'var(--accent)',fontFamily:'var(--font-display)'}}>{c.count}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ======================== DASHBOARD ======================== */
 function Dashboard({ L }) {
   const [data, setData] = aUseState(null);
@@ -609,8 +725,10 @@ function AdminApp({ L, lang, setLang, theme, toggleTheme, authed, setAuthed, pro
   const save = (p) => { editing ? updateProduct({ ...editing, ...p }) : addProduct(p); setView('products'); setEditing(null); };
 
   const nav = [
-    { id: 'dash', icon: 'layout', label: L.admin_dash },
-    { id: 'products', icon: 'grid', label: L.admin_products },
+    { id: 'dash', icon: 'layout', label: 'Analytics' },
+    { id: 'stats', icon: 'grid', label: 'Produtos' },
+    { id: 'products', icon: 'tag', label: L.admin_products },
+    { id: 'coupons', icon: 'spark', label: 'Cupons' },
     { id: 'form', icon: 'plus', label: L.admin_new },
   ];
 
@@ -660,6 +778,7 @@ function AdminApp({ L, lang, setLang, theme, toggleTheme, authed, setAuthed, pro
         </div>
         <div className="admin__content">
           {view === 'dash' && <Dashboard L={L} lang={lang} products={products} />}
+          {view === 'stats' && <ProductStats products={products} />}
 
           {view === 'products' && <ProductsTable L={L} lang={lang} products={products} onEdit={goEdit} onDelete={deleteProduct} onNew={goNew} onRenew={renewProduct} />}
           {view === 'form' && <ProductForm L={L} lang={lang} editing={editing} onSave={save} onCancel={() => setView('products')} />}
