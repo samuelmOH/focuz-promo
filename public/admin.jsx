@@ -11,9 +11,13 @@ function Dashboard({ L }) {
   const [loading, setLoading] = aUseState(true);
 
   aUseEffect(() => {
+    const tk = sessionStorage.getItem('focuz_token') || localStorage.getItem('proruja_tk');
     fetch('/api/analytics/summary', {
-      headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem('focuz_token') }
-    }).then(r => r.json()).then(d => { setData(d); setLoading(false); }).catch(() => setLoading(false));
+      headers: { 'Authorization': 'Bearer ' + tk }
+    }).then(r => r.json()).then(d => {
+      if (d.error) { setLoading(false); return; }
+      setData(d); setLoading(false);
+    }).catch(() => setLoading(false));
   }, []);
 
   if (loading) return <div className="dash__loading">Carregando dados...</div>;
@@ -650,34 +654,7 @@ function AdminApp({ L, lang, setLang, theme, toggleTheme, authed, setAuthed, pro
         </div>
         <div className="admin__content">
           {view === 'dash' && <Dashboard L={L} lang={lang} products={products} />}
-          {view === 'dash' && (
-            <div style={{margin:'1.5rem 0', padding:'1.25rem', background:'var(--surface-2)', borderRadius:'12px', border:'1px solid var(--border)'}}>
-              <div style={{display:'flex', alignItems:'center', gap:'0.75rem', marginBottom:'0.75rem'}}>
-                <span style={{fontSize:'1.25rem'}}>🤖</span>
-                <strong>Bot do Mercado Livre</strong>
-                <span style={{fontSize:'0.75rem', color:'var(--text-2)', marginLeft:'auto'}}>Roda automaticamente todo dia às 8h</span>
-              </div>
-              <button
-                className="btn btn--primary"
-                onClick={runBot}
-                disabled={botRunning}
-                style={{display:'flex', alignItems:'center', gap:'0.5rem'}}
-              >
-                {botRunning ? <span className="spin" /> : <Icon name="trend" size={15} />}
-                {botRunning ? 'Buscando promoções...' : 'Rodar agora'}
-              </button>
-              {botResult && !botResult.error && (
-                <div style={{marginTop:'0.75rem', color:'var(--success, #22c55e)', fontSize:'0.875rem'}}>
-                  ✅ {botResult.totalAdded} produtos adicionados, {botResult.totalSkipped} ignorados
-                </div>
-              )}
-              {botResult && botResult.error && (
-                <div style={{marginTop:'0.75rem', color:'var(--error, #ef4444)', fontSize:'0.875rem'}}>
-                  ❌ {botResult.error}
-                </div>
-              )}
-            </div>
-          )}
+
           {view === 'products' && <ProductsTable L={L} lang={lang} products={products} onEdit={goEdit} onDelete={deleteProduct} onNew={goNew} onRenew={renewProduct} />}
           {view === 'form' && <ProductForm L={L} lang={lang} editing={editing} onSave={save} onCancel={() => setView('products')} />}
         </div>
