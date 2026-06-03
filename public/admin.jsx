@@ -42,19 +42,19 @@ function ProductStats({ products, L }) {
       <div className="dash__kpis">
         <div className="dash__kpi">
           <div className="dash__kpi-val">{total}</div>
-          <div className="dash__kpi-label">Total de produtos</div>
+          <div className="dash__kpi-label">{L.stats_total}</div>
         </div>
         <div className="dash__kpi">
           <div className="dash__kpi-val" style={{color:'#22c55e'}}>{newToday}</div>
-          <div className="dash__kpi-label">Adicionados hoje</div>
+          <div className="dash__kpi-label">{L.stats_today}</div>
         </div>
         <div className="dash__kpi">
           <div className="dash__kpi-val" style={{color:'#f97316'}}>{expiring}</div>
-          <div className="dash__kpi-label">Expirando em breve</div>
+          <div className="dash__kpi-label">{L.stats_expiring}</div>
         </div>
         <div className="dash__kpi">
           <div className="dash__kpi-val" style={{color:'var(--accent)'}}>{Math.round(avgDiscount)}%</div>
-          <div className="dash__kpi-label">Desconto médio</div>
+          <div className="dash__kpi-label">{L.stats_avg_disc}</div>
         </div>
       </div>
 
@@ -153,19 +153,19 @@ function Dashboard({ L }) {
       <div className="dash__kpis">
         <div className="dash__kpi">
           <div className="dash__kpi-val">{data.pageviews.toLocaleString('pt-BR')}</div>
-          <div className="dash__kpi-label">Acessos ao site</div>
+          <div className="dash__kpi-label">{L.dash_pageviews}</div>
         </div>
         <div className="dash__kpi">
           <div className="dash__kpi-val">{data.clicks.toLocaleString('pt-BR')}</div>
-          <div className="dash__kpi-label">Cliques em anúncios</div>
+          <div className="dash__kpi-label">{L.dash_clicks}</div>
         </div>
         <div className="dash__kpi">
           <div className="dash__kpi-val">{data.pageviews > 0 ? ((data.clicks / data.pageviews) * 100).toFixed(1) + '%' : '—'}</div>
-          <div className="dash__kpi-label">Taxa de cliques</div>
+          <div className="dash__kpi-label">{L.dash_ctr}</div>
         </div>
         <div className="dash__kpi">
           <div className="dash__kpi-val">{data.byProduct.length}</div>
-          <div className="dash__kpi-label">Produtos com cliques</div>
+          <div className="dash__kpi-label">{L.dash_prods_clicked}</div>
         </div>
       </div>
 
@@ -282,7 +282,7 @@ function CouponsPanel({ L }) {
       <div className="ptable-head">
         <div />
         <button className="btn btn--primary" onClick={() => setForm({ ...blankCpn })}>
-          <Icon name="plus" size={16} /> Novo cupom
+          <Icon name="plus" size={16} /> {L.cpn_new}
         </button>
       </div>
 
