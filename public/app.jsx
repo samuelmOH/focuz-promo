@@ -73,12 +73,14 @@ function App() {
     document.documentElement.setAttribute('data-theme', 'dark');
     localStorage.removeItem('focuz_theme');
     localStorage.removeItem('focuz_theme_manual');
-    // Forçar cardStyle para soft (remove editorial que causava barra azul)
     const tweaks = JSON.parse(localStorage.getItem('focuz_tweaks') || '{}');
     if (tweaks.cardStyle === 'editorial') {
       tweaks.cardStyle = 'soft';
       localStorage.setItem('focuz_tweaks', JSON.stringify(tweaks));
     }
+    // Pageview tracking
+    fetch('/api/analytics', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ event: 'pageview', url: location.href }) }).catch(() => {});
   }, []);
 
   const [lang, setLang] = tUseState(() => localStorage.getItem('focuz_lang') || 'pt');
@@ -103,7 +105,7 @@ function App() {
   const [authed, setAuthed] = tUseState(() => sessionStorage.getItem('focuz_auth') === '1');
   tUseEffect(() => { authed ? sessionStorage.setItem('focuz_auth', '1') : sessionStorage.removeItem('focuz_auth'); }, [authed]);
 
-  const [store, setStore] = tUseState('amazon');
+  const [store, setStore] = tUseState('all');
   const [category, setCategory] = tUseState('all');
   const [query, setQuery] = tUseState('');
 

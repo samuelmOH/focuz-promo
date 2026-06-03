@@ -4,6 +4,243 @@
    ============================================================ */
 const { useState: aUseState, useMemo: aUseMemo, useRef: aUseRef } = React;
 
+
+/* ======================== DASHBOARD ======================== */
+function Dashboard({ L }) {
+  const [data, setData] = aUseState(null);
+  const [loading, setLoading] = aUseState(true);
+
+  aUseEffect(() => {
+    fetch('/api/analytics/summary', {
+      headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem('focuz_token') }
+    }).then(r => r.json()).then(d => { setData(d); setLoading(false); }).catch(() => setLoading(false));
+  }, []);
+
+  if (loading) return <div className="dash__loading">Carregando dados...</div>;
+  if (!data) return <div className="dash__loading">Erro ao carregar analytics.</div>;
+
+  const storeNames = { ml: 'Mercado Livre', amazon: 'Amazon', shopee: 'Shopee', magalu: 'Magalu', ali: 'AliExpress' };
+
+  return (
+    <div className="dash">
+      {/* KPIs */}
+      <div className="dash__kpis">
+        <div className="dash__kpi">
+          <div className="dash__kpi-val">{data.pageviews.toLocaleString('pt-BR')}</div>
+          <div className="dash__kpi-label">Acessos ao site</div>
+        </div>
+        <div className="dash__kpi">
+          <div className="dash__kpi-val">{data.clicks.toLocaleString('pt-BR')}</div>
+          <div className="dash__kpi-label">Cliques em anúncios</div>
+        </div>
+        <div className="dash__kpi">
+          <div className="dash__kpi-val">{data.pageviews > 0 ? ((data.clicks / data.pageviews) * 100).toFixed(1) + '%' : '—'}</div>
+          <div className="dash__kpi-label">Taxa de cliques</div>
+        </div>
+        <div className="dash__kpi">
+          <div className="dash__kpi-val">{data.byProduct.length}</div>
+          <div className="dash__kpi-label">Produtos com cliques</div>
+        </div>
+      </div>
+
+      <div className="dash__cols">
+        {/* Cliques por loja */}
+        <div className="dash__card">
+          <div className="dash__card-title">Cliques por loja</div>
+          {data.byStore.length === 0 && <p className="dash__empty">Nenhum dado ainda</p>}
+          {data.byStore.map((s, i) => {
+            const max = data.byStore[0]?.clicks || 1;
+            const pct = (s.clicks / max) * 100;
+            return (
+              <div key={s.store} className="dash__bar-row">
+                <span className="dash__bar-label">{storeNames[s.store] || s.store}</span>
+                <div className="dash__bar-track">
+                  <div className="dash__bar-fill" style={{ width: pct + '%' }} />
+                </div>
+                <span className="dash__bar-count">{s.clicks}</span>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Top produtos */}
+        <div className="dash__card">
+          <div className="dash__card-title">Top produtos mais clicados</div>
+          {data.byProduct.length === 0 && <p className="dash__empty">Nenhum dado ainda</p>}
+          {data.byProduct.map((p, i) => (
+            <div key={p.product_id} className="dash__prod-row">
+              <span className="dash__prod-rank">#{i + 1}</span>
+              {p.image_url && <img src={p.image_url} className="dash__prod-img" alt="" />}
+              <div className="dash__prod-info">
+                <div className="dash__prod-name">{p.name || 'Produto removido'}</div>
+                <div className="dash__prod-store">{storeNames[p.store] || p.store}</div>
+              </div>
+              <span className="dash__prod-clicks">{p.clicks} cliques</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Atividade diária */}
+      <div className="dash__card dash__card--full">
+        <div className="dash__card-title">Atividade dos últimos 7 dias</div>
+        {data.daily.length === 0 && <p className="dash__empty">Nenhum dado ainda</p>}
+        <div className="dash__daily">
+          {(() => {
+            const days = {};
+            data.daily.forEach(d => {
+              const day = new Date(d.day).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+              if (!days[day]) days[day] = { pageviews: 0, clicks: 0 };
+              days[day][d.event] = parseInt(d.count);
+            });
+            return Object.entries(days).map(([day, v]) => (
+              <div key={day} className="dash__day">
+                <div className="dash__day-bars">
+                  <div className="dash__day-bar dash__day-bar--pv" style={{ height: Math.max(4, (v.pageviews / (Math.max(...Object.values(days).map(x => x.pageviews)) || 1)) * 80) + 'px' }} title={v.pageviews + ' acessos'} />
+                  <div className="dash__day-bar dash__day-bar--cl" style={{ height: Math.max(4, (v.clicks / (Math.max(...Object.values(days).map(x => x.clicks)) || 1)) * 80) + 'px' }} title={v.clicks + ' cliques'} />
+                </div>
+                <div className="dash__day-label">{day}</div>
+              </div>
+            ));
+          })()}
+        </div>
+        <div className="dash__legend">
+          <span><i className="dash__dot dash__dot--pv" /> Acessos</span>
+          <span><i className="dash__dot dash__dot--cl" /> Cliques</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ======================== COUPONS ======================== */
+const STORES_LIST = [
+  { id: 'ml', name: 'Mercado Livre' }, { id: 'amazon', name: 'Amazon' },
+  { id: 'shopee', name: 'Shopee' }, { id: 'magalu', name: 'Magalu' },
+  { id: 'ali', name: 'AliExpress' }
+];
+const blankCpn = { store: 'ml', code: '', description: '', discount: '', minValue: '', expiresAt: '', url: '', active: true };
+
+function CouponsPanel() {
+  const [coupons, setCoupons] = aUseState([]);
+  const [form, setForm] = aUseState(null);
+  const [busy, setBusy] = aUseState(false);
+  const [msg, setMsg] = aUseState('');
+  const token = sessionStorage.getItem('focuz_token');
+  const headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token };
+
+  const load = () => fetch('/api/coupons/all', { headers }).then(r => r.json()).then(setCoupons).catch(() => {});
+  aUseEffect(() => { load(); }, []);
+
+  const save = async () => {
+    setBusy(true); setMsg('');
+    const method = form.id ? 'PUT' : 'POST';
+    const url = form.id ? '/api/coupons/' + form.id : '/api/coupons';
+    const res = await fetch(url, { method, headers, body: JSON.stringify(form) });
+    const d = await res.json();
+    setBusy(false);
+    if (d.error) { setMsg(d.error); return; }
+    setForm(null); load();
+  };
+
+  const del = async (id) => {
+    if (!confirm('Excluir cupom?')) return;
+    await fetch('/api/coupons/' + id, { method: 'DELETE', headers });
+    load();
+  };
+
+  const set = k => e => setForm(f => ({ ...f, [k]: e.target.value }));
+
+  return (
+    <div className="cpanel">
+      <div className="ptable-head">
+        <div />
+        <button className="btn btn--primary" onClick={() => setForm({ ...blankCpn })}>
+          <Icon name="plus" size={16} /> Novo cupom
+        </button>
+      </div>
+
+      {form && (
+        <div className="cpanel__form">
+          <div className="cpanel__grid">
+            <div className="field">
+              <span className="field__label">Loja</span>
+              <div className="field__wrap">
+                <select value={form.store} onChange={set('store')}>
+                  {STORES_LIST.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                </select>
+              </div>
+            </div>
+            <div className="field">
+              <span className="field__label">Código</span>
+              <div className="field__wrap"><input value={form.code} onChange={set('code')} placeholder="PROMO10" /></div>
+            </div>
+            <div className="field">
+              <span className="field__label">Desconto</span>
+              <div className="field__wrap"><input value={form.discount} onChange={set('discount')} placeholder="10% OFF" /></div>
+            </div>
+            <div className="field">
+              <span className="field__label">Valor mínimo R$</span>
+              <div className="field__wrap"><input type="number" value={form.minValue} onChange={set('minValue')} placeholder="0" /></div>
+            </div>
+            <div className="field">
+              <span className="field__label">Expira em</span>
+              <div className="field__wrap"><input type="datetime-local" value={form.expiresAt} onChange={set('expiresAt')} /></div>
+            </div>
+            <div className="field">
+              <span className="field__label">URL da loja</span>
+              <div className="field__wrap"><input value={form.url} onChange={set('url')} placeholder="https://..." /></div>
+            </div>
+            <div className="field field--full">
+              <span className="field__label">Descrição</span>
+              <div className="field__wrap"><textarea rows={2} value={form.description} onChange={set('description')} placeholder="Ex: 10% OFF em eletrônicos acima de R$200" /></div>
+            </div>
+            <div className="field">
+              <span className="field__label">Ativo</span>
+              <div className="field__wrap">
+                <select value={form.active ? 'true' : 'false'} onChange={e => setForm(f => ({ ...f, active: e.target.value === 'true' }))}>
+                  <option value="true">Sim</option>
+                  <option value="false">Não</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          {msg && <div className="admin__flash admin__flash--err">{msg}</div>}
+          <div className="pform__actions">
+            <button className="btn btn--ghost" onClick={() => setForm(null)}>Cancelar</button>
+            <button className="btn btn--primary" onClick={save} disabled={busy}>{busy ? 'Salvando...' : 'Salvar cupom'}</button>
+          </div>
+        </div>
+      )}
+
+      <div className="cpanel__list">
+        {coupons.length === 0 && <p style={{color:'var(--ink-3)',padding:'20px'}}>Nenhum cupom cadastrado.</p>}
+        {coupons.map(c => (
+          <div key={c.id} className={'cpanel__item' + (!c.active ? ' cpanel__item--off' : '')}>
+            <div className="cpanel__store">
+              <StoreLogo store={c.store} size={32} />
+            </div>
+            <div className="cpanel__info">
+              <div className="cpanel__code">{c.code}</div>
+              <div className="cpanel__desc">{c.description}</div>
+              <div className="cpanel__meta">
+                {c.discount && <span className="cpanel__tag">{c.discount}</span>}
+                {c.min_value > 0 && <span className="cpanel__tag">Mín R${parseFloat(c.min_value).toFixed(2)}</span>}
+                {c.expires_at && <span className="cpanel__tag">Expira {new Date(c.expires_at).toLocaleDateString('pt-BR')}</span>}
+                {!c.active && <span className="cpanel__tag cpanel__tag--off">Inativo</span>}
+              </div>
+            </div>
+            <div className="cpanel__acts">
+              <button className="iconbtn iconbtn--sm" onClick={() => setForm({ ...c, minValue: c.min_value, expiresAt: c.expires_at ? c.expires_at.slice(0,16) : '' })}><Icon name="edit" size={15} /></button>
+              <button className="iconbtn iconbtn--sm iconbtn--danger" onClick={() => del(c.id)}><Icon name="trash" size={15} /></button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ---------------- Login (hashed, no plaintext credentials in code) ---------------- */
 function AdminLogin({ L, onLogin, onBack }) {
   const [user, setUser] = aUseState('');
@@ -57,57 +294,7 @@ function AdminLogin({ L, onLogin, onBack }) {
   );
 }
 
-/* ---------------- Dashboard ---------------- */
-function Dashboard({ L, lang, products }) {
-  const stats = aUseMemo(() => {
-    const total = products.length;
-    const stores = new Set(products.map((p) => p.store)).size;
-    const avg = total ? products.reduce((s, p) => s + p.price, 0) / total : 0;
-    const discs = products.map((p) => discountPct(p.price, p.oldPrice)).filter(Boolean);
-    const avgDisc = discs.length ? Math.round(discs.reduce((a, b) => a + b, 0) / discs.length) : 0;
-    const byStore = window.FOCUZ_STORES.filter(s => s.id !== 'all').map(s => ({
-      ...s, n: products.filter(p => p.store === s.id).length,
-    }));
-    const max = Math.max(1, ...byStore.map(s => s.n));
-    return { total, stores, avg, avgDisc, byStore, max };
-  }, [products]);
 
-  const kpis = [
-    { icon: 'box', label: L.kpi_total, val: stats.total },
-    { icon: 'globe', label: L.kpi_stores, val: stats.stores + ' / 5' },
-    { icon: 'tag', label: L.kpi_avg, val: fmtBRL(stats.avg) },
-    { icon: 'trend', label: L.kpi_disc, val: stats.avgDisc + '%' },
-  ];
-  return (
-    <div className="dash">
-      <div className="kpis">
-        {kpis.map((k) => (
-          <div className="kpi" key={k.label}>
-            <div className="kpi__icon"><Icon name={k.icon} size={18} /></div>
-            <div className="kpi__val">{k.val}</div>
-            <div className="kpi__label">{k.label}</div>
-          </div>
-        ))}
-      </div>
-      <div className="panel">
-        <div className="panel__head"><h3>{lang === 'en' ? 'Products by store' : 'Produtos por loja'}</h3></div>
-        <div className="bars">
-          {stats.byStore.map((s) => (
-            <div className="bar" key={s.id}>
-              <span className="bar__name" data-store={s.id}>
-                <StoreLogo store={s.id} size={22} />{s.short}
-              </span>
-              <div className="bar__track">
-                <div className="bar__fill" data-store={s.id} style={{ width: (s.n / stats.max * 100) + '%' }} />
-              </div>
-              <span className="bar__n mono">{s.n}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 /* ---------------- Products Table ---------------- */
 function ProductsTable({ L, lang, products, onEdit, onDelete, onNew, onRenew }) {

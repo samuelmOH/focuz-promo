@@ -304,15 +304,22 @@ function StoreSidebar({ L, lang, store, setStore, category, setCategory, product
             ))}
           </div>
         </div>
-        {/* Mobile: grid de logos */}
-        <div className="storepicker__grid">
-          {stores.map((s) => (
-            <button key={s.id} className={'storepicker__tile' + (store === s.id ? ' is-active' : '')}
-              onClick={() => setStore(s.id)}>
-              <StoreLogo store={s.id} size={44} />
-              <span className="storepicker__tilename">{s.short}</span>
-            </button>
-          ))}
+        {/* Mobile: botão Todas acima + grid das lojas */}
+        <div className="storepicker__mobilewrap">
+          <button className={'storepicker__allbtn' + (store === 'all' ? ' is-active' : '')}
+            onClick={() => setStore('all')}>
+            <StoreLogo store="all" size={28} />
+            <span>Todas as lojas</span>
+          </button>
+          <div className="storepicker__grid">
+            {stores.filter(s => s.id !== 'all').map((s) => (
+              <button key={s.id} className={'storepicker__tile' + (store === s.id ? ' is-active' : '')}
+                onClick={() => setStore(s.id)}>
+                <StoreLogo store={s.id} size={44} />
+                <span className="storepicker__tilename">{s.short}</span>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
       <div className="catfilter">
@@ -404,7 +411,7 @@ function ProductModal({ p, L, lang, onClose }) {
             href={p.url || '#'}
             target={p.url && p.url !== '#' ? '_blank' : undefined}
             rel="noopener noreferrer"
-            onClick={onClose}
+            onClick={() => { onClose(); fetch('/api/analytics',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event:'click',product_id:p.id,store:p.store,url:p.url})}).catch(()=>{}); }}
           >
             Comprar agora
           </a>
@@ -478,7 +485,7 @@ function ProductCard({ p, L, lang, tw, i = 0, onOpenModal }) {
             <span className="card__price">{fmtBRL(p.price)}</span>
           </div>
           <a className="card__buy" href={p.url || '#'} target={p.url && p.url !== '#' ? '_blank' : undefined} rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}>
+            onClick={(e) => { e.stopPropagation(); fetch('/api/analytics',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event:'click',product_id:p.id,store:p.store,url:p.url})}).catch(()=>{}); }}>
             {L.buy} <Icon name="cart" size={15} />
           </a>
         </div>
