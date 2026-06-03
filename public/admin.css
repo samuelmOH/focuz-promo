@@ -355,3 +355,30 @@
     box-shadow: 0 0 0 1px var(--accent), 0 4px 12px rgba(99,102,241,.2);
   }
 }
+
+/* ── Dashboard mobile ── */
+@media (max-width: 600px) {
+  .dash__kpis { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .dash__kpi { padding: 14px; }
+  .dash__kpi-val { font-size: 22px; }
+
+  .dash__cols { grid-template-columns: 1fr; gap: 10px; }
+  .dash__card { padding: 14px; }
+  .dash__card--full { grid-column: 1; }
+
+  .dash__bar-label { width: 80px; font-size: 11px; }
+  .dash__bar-count { width: 24px; font-size: 11px; }
+
+  .dash__prod-row { gap: 8px; }
+  .dash__prod-name { font-size: 11px; }
+  .dash__prod-clicks { font-size: 11px; }
+
+  .dash__daily { gap: 6px; }
+  .dash__day-bar { width: 9px; }
+  .dash__day-label { font-size: 9px; }
+
+  /* Categoria grid menor */
+  .dash > .dash__card--full > div[style*="grid"] {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)) !important;
+  }
+}

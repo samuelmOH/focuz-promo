@@ -784,7 +784,7 @@ function AdminApp({ L, lang, setLang, theme, toggleTheme, authed, setAuthed, pro
           <h2 className="admin__h">
             {view === 'dash' ? L.admin_dash : view === 'products' ? L.admin_products : (editing ? L.form_edit : L.form_new)}
           </h2>
-          {view !== 'form' && <button className="btn btn--primary" onClick={goNew}><Icon name="plus" size={16} /> {L.admin_new}</button>}
+          {view === 'products' && <button className="btn btn--primary" onClick={goNew}><Icon name="plus" size={16} /> {L.admin_new}</button>}
         </div>
         <div className="admin__content">
           {view === 'dash' && <Dashboard L={L} lang={lang} products={products} />}
