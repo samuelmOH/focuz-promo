@@ -20,7 +20,27 @@ if (!JWT_SECRET) {
 }
 
 // ── Middlewares ──────────────────────────────────────────────
-app.use(cors());
+app.use(cors({
+  origin: function(origin, callback) {
+    // Permitir: sem origin (curl, Postman), domínio próprio, ML e variantes
+    const allowed = [
+      /proruja\.up\.railway\.app$/,
+      /focuz-promo-production\.up\.railway\.app$/,
+      /mercadolivre\.com\.br$/,
+      /mercadolibre\.com$/,
+      /mercadopago\.com\.br$/,
+      /localhost/,
+    ];
+    if (!origin || allowed.some(r => r.test(origin))) {
+      callback(null, true);
+    } else {
+      callback(null, true); // Permitir todos por enquanto (bookmarklet)
+    }
+  },
+  credentials: true,
+  methods: ['GET','POST','PUT','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization','Cache-Control'],
+}));
 app.use(express.json());
 
 // Serve os arquivos estáticos do frontend (pasta public/)
