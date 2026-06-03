@@ -167,7 +167,7 @@ window.FOCUZ_I18N = {
     cpn_save: 'Salvar cupom', cpn_none: 'Nenhum cupom cadastrado.',
     cpn_general: 'Geral', cpn_yes: 'Sim', cpn_no: 'Não',
     // product table
-    tbl_status: 'Status', tbl_renew: 'Renovar',
+    tbl_status: 'Status', tbl_renew: 'Renovar', tbl_all: 'Todas',
     status_new: 'Novo', status_active: 'Ativo', status_expiring: 'Expirando', status_expired: 'Expirado',
   },
   en: {
@@ -232,7 +232,7 @@ window.FOCUZ_I18N = {
     cpn_save: 'Save coupon', cpn_none: 'No coupons registered.',
     cpn_general: 'General', cpn_yes: 'Yes', cpn_no: 'No',
     // product table
-    tbl_status: 'Status', tbl_renew: 'Renew',
+    tbl_status: 'Status', tbl_renew: 'Renew', tbl_all: 'All',
     status_new: 'New', status_active: 'Active', status_expiring: 'Expiring', status_expired: 'Expired',
   },
 };

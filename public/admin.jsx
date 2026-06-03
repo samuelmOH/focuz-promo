@@ -61,7 +61,7 @@ function ProductStats({ products, L }) {
       <div className="dash__cols">
         {/* Por loja */}
         <div className="dash__card">
-          <div className="dash__card-title">Produtos por loja</div>
+          <div className="dash__card-title">{L.stats_by_store}</div>
           {byStore.length === 0 && <p className="dash__empty">Nenhum produto</p>}
           {byStore.map(s => (
             <div key={s.id} className="dash__bar-row">
@@ -79,7 +79,7 @@ function ProductStats({ products, L }) {
 
         {/* Status */}
         <div className="dash__card">
-          <div className="dash__card-title">Status dos produtos</div>
+          <div className="dash__card-title">{L.stats_status}</div>
           <div style={{display:'flex',flexDirection:'column',gap:'10px',marginTop:'4px'}}>
             {[
               {label:L.stats_active, val: active, color:'#818cf8'},
@@ -101,7 +101,7 @@ function ProductStats({ products, L }) {
 
       {/* Por categoria */}
       <div className="dash__card dash__card--full">
-        <div className="dash__card-title">Produtos por categoria</div>
+        <div className="dash__card-title">{L.stats_by_cat}</div>
         {byCat.length === 0 && <p className="dash__empty">Nenhum produto</p>}
         <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(180px,1fr))',gap:'8px',marginTop:'4px'}}>
           {byCat.map(c => (
@@ -145,7 +145,7 @@ function Dashboard({ L }) {
   if (loading) return <div className="dash__loading">{L.loading || "Loading..."}</div>;
   if (!data) return <div className="dash__loading">{L.dash_error || "Error loading analytics."}</div>;
 
-  const storeNames = { ml: 'Mercado Livre', amazon: 'Amazon', shopee: 'Shopee', magalu: 'Magalu', ali: 'AliExpress' };
+  const storeNames = (id) => { const m = window.FOCUZ_STORE_MAP || {}; return (m[id] && m[id].name) || id; };
 
   return (
     <div className="dash">
@@ -172,14 +172,14 @@ function Dashboard({ L }) {
       <div className="dash__cols">
         {/* Cliques por loja */}
         <div className="dash__card">
-          <div className="dash__card-title">Cliques por loja</div>
+          <div className="dash__card-title">{L.dash_by_store}</div>
           {data.byStore.length === 0 && <p className="dash__empty">Nenhum dado ainda</p>}
           {data.byStore.map((s, i) => {
             const max = data.byStore[0]?.clicks || 1;
             const pct = (s.clicks / max) * 100;
             return (
               <div key={s.store} className="dash__bar-row">
-                <span className="dash__bar-label">{storeNames[s.store] || s.store}</span>
+                <span className="dash__bar-label">{storeNames(s.store)}</span>
                 <div className="dash__bar-track">
                   <div className="dash__bar-fill" style={{ width: pct + '%' }} />
                 </div>
@@ -191,7 +191,7 @@ function Dashboard({ L }) {
 
         {/* Top produtos */}
         <div className="dash__card">
-          <div className="dash__card-title">Top produtos mais clicados</div>
+          <div className="dash__card-title">{L.dash_top_products}</div>
           {data.byProduct.length === 0 && <p className="dash__empty">Nenhum dado ainda</p>}
           {data.byProduct.map((p, i) => (
             <div key={p.product_id} className="dash__prod-row">
@@ -199,7 +199,7 @@ function Dashboard({ L }) {
               {p.image_url && <img src={p.image_url} className="dash__prod-img" alt="" />}
               <div className="dash__prod-info">
                 <div className="dash__prod-name">{p.name || L.dash_removed}</div>
-                <div className="dash__prod-store">{storeNames[p.store] || p.store}</div>
+                <div className="dash__prod-store">{storeNames(p.store)}</div>
               </div>
               <span className="dash__prod-clicks">{p.clicks} cliques</span>
             </div>
@@ -209,7 +209,7 @@ function Dashboard({ L }) {
 
       {/* Atividade diária */}
       <div className="dash__card dash__card--full">
-        <div className="dash__card-title">Atividade dos últimos 7 dias</div>
+        <div className="dash__card-title">{L.dash_activity}</div>
         {data.daily.length === 0 && <p className="dash__empty">Nenhum dado ainda</p>}
         <div className="dash__daily">
           {(() => {
@@ -470,7 +470,7 @@ function ProductsTable({ L, lang, products, onEdit, onDelete, onNew, onRenew }) 
           const st = window.FOCUZ_STORE_MAP[s];
           return (
             <button key={s} className={'ptable-filter' + (storeFilter === s ? ' is-active' : '')} onClick={() => setStoreFilter(s)}>
-              {s === 'all' ? 'Todas' : <><StoreLogo store={s} size={16} className="store-logo--bare" />{st?.short}</>}
+              {s === 'all' ? (L.tbl_all || 'Todas') : <><StoreLogo store={s} size={16} className="store-logo--bare" />{st?.short}</>}
             </button>
           );
         })}
