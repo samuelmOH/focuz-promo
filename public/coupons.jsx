@@ -144,7 +144,27 @@ function CouponsPage({ L, lang, go }) {
           </div>
         )}
 
-        {loading && <div className="coupons-page__empty">Carregando cupons...</div>}
+        {loading && (
+          <div className="coupons-grid">
+            {[0,1,2,3,4,5].map(i => (
+              <div key={i} className="coupon coupon--skeleton" style={{'--i': i}}>
+                <div className="coupon__stripe" />
+                <div className="coupon__head">
+                  <div className="skel skel--circle" />
+                  <div className="skel skel--line" style={{width:'60%'}} />
+                </div>
+                <div className="coupon__body">
+                  <div className="skel skel--line" style={{width:'40%', marginBottom:'8px'}} />
+                  <div className="skel skel--line" style={{width:'90%', marginBottom:'6px'}} />
+                  <div className="skel skel--line" style={{width:'70%'}} />
+                </div>
+                <div className="coupon__foot" style={{borderTop:'1px solid var(--line)'}}>
+                  <div className="skel skel--code" />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
         {!loading && list.length === 0 && (
           <div className="coupons-page__empty">
             <div style={{fontSize:'48px', marginBottom:'12px'}}>🎟️</div>
@@ -154,7 +174,11 @@ function CouponsPage({ L, lang, go }) {
         )}
 
         <div className="coupons-grid">
-          {list.map(c => <CouponCard key={c.id} c={c} lang={lang} />)}
+          {list.map((c, i) => (
+            <div key={c.id} className="coupon-appear" style={{'--i': i}}>
+              <CouponCard c={c} lang={lang} />
+            </div>
+          ))}
         </div>
       </div>
     </div>
