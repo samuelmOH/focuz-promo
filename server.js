@@ -337,14 +337,14 @@ app.get('/api/analytics/summary', auth, async (req, res) => {
       pool.query("SELECT COUNT(*) FROM analytics WHERE event='pageview'"),
       pool.query("SELECT COUNT(*) FROM analytics WHERE event='click'"),
       pool.query("SELECT store, COUNT(*) as clicks FROM analytics WHERE event='click' AND store IS NOT NULL GROUP BY store ORDER BY clicks DESC"),
-      pool.query(\`SELECT a.product_id, p.name_pt as name, p.store, p.image_url, COUNT(*) as clicks
+      pool.query(`SELECT a.product_id, p.name_pt as name, p.store, p.image_url, COUNT(*) as clicks
         FROM analytics a LEFT JOIN products p ON p.id=a.product_id
         WHERE a.event='click' AND a.product_id IS NOT NULL
         GROUP BY a.product_id, p.name_pt, p.store, p.image_url
-        ORDER BY clicks DESC LIMIT 10\`),
-      pool.query(\`SELECT DATE_TRUNC('day', created_at) as day, event, COUNT(*) as count
+        ORDER BY clicks DESC LIMIT 10`),
+      pool.query(`SELECT DATE_TRUNC('day', created_at) as day, event, COUNT(*) as count
         FROM analytics WHERE created_at > NOW() - INTERVAL '7 days'
-        GROUP BY day, event ORDER BY day ASC\`)
+        GROUP BY day, event ORDER BY day ASC`)
     ]);
     res.json({
       pageviews: parseInt(pageviews.rows[0].count),
@@ -376,8 +376,8 @@ app.post('/api/coupons', auth, async (req, res) => {
     const c = req.body;
     const id = 'cpn_' + Date.now();
     const { rows } = await pool.query(
-      \`INSERT INTO coupons (id,store,code,description,discount,min_value,expires_at,url,active)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *\`,
+      `INSERT INTO coupons (id,store,code,description,discount,min_value,expires_at,url,active)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *`,
       [id, c.store, c.code, c.description||'', c.discount||'', c.minValue||null,
        c.expiresAt||null, c.url||'', c.active !== false]
     );
@@ -389,8 +389,8 @@ app.put('/api/coupons/:id', auth, async (req, res) => {
   try {
     const c = req.body;
     const { rows } = await pool.query(
-      \`UPDATE coupons SET store=$1,code=$2,description=$3,discount=$4,
-       min_value=$5,expires_at=$6,url=$7,active=$8 WHERE id=$9 RETURNING *\`,
+      `UPDATE coupons SET store=$1,code=$2,description=$3,discount=$4,
+       min_value=$5,expires_at=$6,url=$7,active=$8 WHERE id=$9 RETURNING *`,
       [c.store, c.code, c.description||'', c.discount||'', c.minValue||null,
        c.expiresAt||null, c.url||'', c.active !== false, req.params.id]
     );
