@@ -235,61 +235,6 @@ function startCron() {
 }
 startCron();
 
-// ── Fallback SPA ─────────────────────────────────────────────
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-// ── Helpers ──────────────────────────────────────────────────
-function dbToProduct(row) {
-  return {
-    id:       row.id,
-    name:     row.name_pt,
-    nameEn:   row.name_en,
-    store:    row.store,
-    category: row.category,
-    price:    parseFloat(row.price),
-    oldPrice: row.old_price ? parseFloat(row.old_price) : null,
-    rating:   parseFloat(row.rating),
-    reviews:  row.reviews,
-    url:      row.url,
-    imageUrl: row.image_url,
-    image:    row.image_url,
-    desc:     row.description || '',
-    description: row.description || '',
-    createdAt: row.created_at,
-  };
-}
-
-// ── Limpeza automática — produtos expiram em 48h ──────────────
-async function cleanExpiredProducts() {
-  try {
-    const res = await pool.query(
-      "DELETE FROM products WHERE created_at < NOW() - INTERVAL '48 hours' RETURNING id"
-    );
-    if (res.rowCount > 0) console.log(`🗑️ ${res.rowCount} produtos expirados removidos`);
-  } catch (err) {
-    console.error('Erro na limpeza:', err.message);
-  }
-}
-
-// Roda a limpeza ao iniciar e a cada hora
-cleanExpiredProducts();
-setInterval(cleanExpiredProducts, 60 * 60 * 1000);
-
-// Rota manual de limpeza (admin)
-app.delete('/api/products/expired', auth, async (req, res) => {
-  try {
-    const result = await pool.query(
-      "DELETE FROM products WHERE created_at < NOW() - INTERVAL '48 hours' RETURNING id"
-    );
-    res.json({ deleted: result.rowCount });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-
 // ── Analytics + Cupons ────────────────────────────────────────
 async function initExtraTables() {
   await pool.query(`
@@ -405,6 +350,61 @@ app.delete('/api/coupons/:id', auth, async (req, res) => {
     res.json({ ok: true });
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
+
+// ── Fallback SPA ─────────────────────────────────────────────
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// ── Helpers ──────────────────────────────────────────────────
+function dbToProduct(row) {
+  return {
+    id:       row.id,
+    name:     row.name_pt,
+    nameEn:   row.name_en,
+    store:    row.store,
+    category: row.category,
+    price:    parseFloat(row.price),
+    oldPrice: row.old_price ? parseFloat(row.old_price) : null,
+    rating:   parseFloat(row.rating),
+    reviews:  row.reviews,
+    url:      row.url,
+    imageUrl: row.image_url,
+    image:    row.image_url,
+    desc:     row.description || '',
+    description: row.description || '',
+    createdAt: row.created_at,
+  };
+}
+
+// ── Limpeza automática — produtos expiram em 48h ──────────────
+async function cleanExpiredProducts() {
+  try {
+    const res = await pool.query(
+      "DELETE FROM products WHERE created_at < NOW() - INTERVAL '48 hours' RETURNING id"
+    );
+    if (res.rowCount > 0) console.log(`🗑️ ${res.rowCount} produtos expirados removidos`);
+  } catch (err) {
+    console.error('Erro na limpeza:', err.message);
+  }
+}
+
+// Roda a limpeza ao iniciar e a cada hora
+cleanExpiredProducts();
+setInterval(cleanExpiredProducts, 60 * 60 * 1000);
+
+// Rota manual de limpeza (admin)
+app.delete('/api/products/expired', auth, async (req, res) => {
+  try {
+    const result = await pool.query(
+      "DELETE FROM products WHERE created_at < NOW() - INTERVAL '48 hours' RETURNING id"
+    );
+    res.json({ deleted: result.rowCount });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 
 // ── Start ─────────────────────────────────────────────────────
 app.listen(PORT, () => console.log(`✅ Focuz backend rodando na porta ${PORT}`));
