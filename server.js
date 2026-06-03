@@ -20,7 +20,15 @@ if (!JWT_SECRET) {
 }
 
 // ── Middlewares ──────────────────────────────────────────────
-app.use(cors());
+const corsOptions = {
+  origin: true, // permite qualquer origem (bookmarklets precisam disso)
+  methods: ['GET','POST','PUT','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization'],
+  credentials: false,
+};
+app.use(cors(corsOptions));
+// Responde preflight OPTIONS em todas as rotas
+app.options('*', cors(corsOptions));
 app.use(express.json());
 
 // Serve os arquivos estáticos do frontend (pasta public/)
