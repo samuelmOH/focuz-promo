@@ -917,13 +917,21 @@ body.modal-open .card--soft {
   }
 
   .storepicker__tile {
-    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
     padding: 8px 4px;
     border-radius: 14px;
     border: 2px solid transparent;
     background: var(--surface-2);
     cursor: pointer;
     transition: all .15s;
+    width: 100%;
+    aspect-ratio: 1;
+  }
+  /* Forçar logo igual em todos os tiles */
+  .storepicker__tile .store-logo {
+    width: 40px !important;
+    height: 40px !important;
+    flex-shrink: 0;
   }
   .storepicker__tile:active { transform: scale(.94); }
 
