@@ -182,7 +182,7 @@ function ScreenWrap({ animKey, children }) {
   const [entering, setEntering] = tUseState(true);
   tUseEffect(() => {
     setEntering(true);
-    const t = setTimeout(() => setEntering(false), 650);
+    const t = setTimeout(() => setEntering(false), 450);
     return () => clearTimeout(t);
   }, [animKey]);
   return <div className={'screen' + (entering ? ' is-entering' : '')}>{children}</div>;
